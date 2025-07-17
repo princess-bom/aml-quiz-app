@@ -10,7 +10,7 @@ class HomeController < ApplicationController
   private
 
   def calculate_user_stats
-    user_sessions = QuizSession.find_by_user(current_user['uid'])
+    user_sessions = QuizSession.find_all_by_user(current_user['uid']) || []
     completed_sessions = user_sessions.select(&:completed?)
     
     return { total_sessions: 0, average_score: 0, best_score: 0 } if completed_sessions.empty?
@@ -46,7 +46,7 @@ class HomeController < ApplicationController
   end
 
   def has_completed_quiz?(subject, question_type, difficulty)
-    user_sessions = QuizSession.find_by_user(current_user['uid'])
+    user_sessions = QuizSession.find_all_by_user(current_user['uid']) || []
     completed_sessions = user_sessions.select(&:completed?)
     
     completed_sessions.any? { |session|
@@ -60,7 +60,7 @@ class HomeController < ApplicationController
   end
 
   def get_last_studied_date(subject)
-    user_sessions = QuizSession.find_by_user(current_user['uid'])
+    user_sessions = QuizSession.find_all_by_user(current_user['uid']) || []
     completed_sessions = user_sessions.select(&:completed?)
     
     subject_sessions = completed_sessions.select { |session|
@@ -74,7 +74,7 @@ class HomeController < ApplicationController
   end
 
   def get_recent_activity
-    user_sessions = QuizSession.find_by_user(current_user['uid'])
+    user_sessions = QuizSession.find_all_by_user(current_user['uid']) || []
     completed_sessions = user_sessions.select(&:completed?)
     
     completed_sessions.sort_by(&:completed_at)
@@ -102,7 +102,7 @@ class HomeController < ApplicationController
   end
 
   def get_weak_areas_summary
-    wrong_answers = WrongAnswer.find_by_user(current_user['uid'])
+    wrong_answers = WrongAnswer.find_by_user(current_user['uid']) || []
     return [] if wrong_answers.empty?
     
     # Group by subject and count

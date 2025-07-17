@@ -16,15 +16,6 @@ class Quiz
   attribute :created_at, :datetime
   attribute :updated_at, :datetime
 
-  validates :question, presence: true
-  validates :score, presence: true, inclusion: { in: [5, 10, 15] }
-  validates :choices, presence: true, length: { is: 5 }
-  validates :correct_answer, presence: true
-  validates :explanation, presence: true
-  validates :subject, presence: true, inclusion: { in: SUBJECTS }
-  validates :question_type, presence: true, inclusion: { in: QUESTION_TYPES }
-  validates :difficulty, presence: true, inclusion: { in: DIFFICULTY_LEVELS }
-
   # Constants for validation
   SUBJECTS = [
     "자금세탁방지 글로벌 기준",
@@ -37,6 +28,15 @@ class Quiz
 
   QUESTION_TYPES = %w[A B C].freeze
   DIFFICULTY_LEVELS = %w[상급 중상급 최상급].freeze
+
+  validates :question, presence: true
+  validates :score, presence: true, inclusion: { in: [5, 10, 15] }
+  validates :choices, presence: true, length: { is: 5 }
+  validates :correct_answer, presence: true
+  validates :explanation, presence: true
+  validates :subject, presence: true, inclusion: { in: SUBJECTS }
+  validates :question_type, presence: true, inclusion: { in: QUESTION_TYPES }
+  validates :difficulty, presence: true, inclusion: { in: DIFFICULTY_LEVELS }
 
   class << self
     def collection

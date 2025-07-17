@@ -38,15 +38,27 @@ class QuizSession
 
     def find_by_user(user_id)
       if FIRESTORE
-        collection.where(:user_id, :==, user_id)
-                  .where(:status, :==, 'active')
-                  .get
-                  .map { |doc| new(doc.data.merge(id: doc.document_id)) }
-                  .first
+        sessions = collection.where(:user_id, :==, user_id)
+                            .get
+                            .map { |doc| new(doc.data.merge(id: doc.document_id)) }
+        sessions.select { |session| session.status == 'active' }.first
       else
         # In development mode, check cache
         cached_session_id = Rails.cache.read("active_session_#{user_id}")
         cached_session_id ? find(cached_session_id) : nil
+      end
+    end
+
+    def find_all_by_user(user_id)
+      if FIRESTORE
+        collection.where(:user_id, :==, user_id)
+                  .order_by(:created_at, :desc)
+                  .get
+                  .map { |doc| new(doc.data.merge(id: doc.document_id)) }
+      else
+        # In development mode, get all cached sessions for user
+        cached_session_ids = Rails.cache.read("user_sessions_#{user_id}") || []
+        cached_session_ids.map { |id| find(id) }.compact
       end
     end
 
@@ -88,6 +100,12 @@ class QuizSession
       self.id ||= SecureRandom.uuid
       Rails.cache.write("quiz_session_#{id}", to_hash, expires_in: 1.hour)
       Rails.cache.write("active_session_#{user_id}", id, expires_in: 1.hour) if status == 'active'
+      
+      # Update user sessions list
+      user_sessions = Rails.cache.read("user_sessions_#{user_id}") || []
+      user_sessions.unshift(id) unless user_sessions.include?(id)
+      user_sessions = user_sessions.first(50) # Keep only last 50 sessions
+      Rails.cache.write("user_sessions_#{user_id}", user_sessions, expires_in: 1.week)
     end
     true
   end
