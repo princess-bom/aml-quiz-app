@@ -50,8 +50,13 @@ class QuizSession
       end
     end
 
-    def create_for_user(user_id, quiz_count = 3)
-      quizzes = Quiz.random(quiz_count)
+    def create_for_user(user_id, quiz_count = 20, subject: nil, question_type: nil, difficulty: nil)
+      quizzes = Quiz.random_by_criteria(
+        subject: subject,
+        question_type: question_type,
+        difficulty: difficulty,
+        limit: quiz_count
+      )
       quiz_ids = quizzes.map(&:id)
       
       session = new(
@@ -114,6 +119,9 @@ class QuizSession
     if is_correct
       self.correct_answers += 1
       self.score += current_quiz_obj.score
+    else
+      # Add to wrong answers
+      WrongAnswer.create_from_quiz_session(user_id, current_quiz_obj, answer)
     end
     
     # Move to next question

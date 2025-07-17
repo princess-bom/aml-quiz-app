@@ -14,6 +14,12 @@ Rails.application.routes.draw do
   post "login" => "sessions#create"
   delete "logout" => "sessions#destroy", as: :logout
 
+  # Quiz selection routes
+  get "quiz_selection" => "quiz_selection#index", as: :quiz_selection
+  get "quiz_selection/:subject" => "quiz_selection#show_subject", as: :quiz_selection_subject
+  post "quiz_selection/start" => "quiz_selection#start_quiz", as: :start_quiz
+  get "quiz_selection/recommended" => "quiz_selection#recommended", as: :recommended_quizzes
+
   # Quiz routes
   resources :quizzes, only: [:show, :new, :create] do
     member do
@@ -23,6 +29,25 @@ Rails.application.routes.draw do
 
   # Quiz results routes
   resources :quiz_results, only: [:show]
+
+  # Wrong answers routes
+  resources :wrong_answers do
+    member do
+      patch :toggle_bookmark
+      patch :update_note
+      post :retry_quiz
+    end
+    
+    collection do
+      post :bulk_retry
+      get :export
+      get :analytics
+    end
+  end
+
+  # Learning analytics routes
+  get "analytics" => "analytics#index", as: :analytics
+  get "analytics/subjects/:subject" => "analytics#subject", as: :subject_analytics
 
   # Root route
   root "home#index"

@@ -11,6 +11,8 @@ class Quiz
   attribute :reference, :string
   attribute :difficulty, :string
   attribute :category, :string
+  attribute :subject, :string
+  attribute :question_type, :string
   attribute :created_at, :datetime
   attribute :updated_at, :datetime
 
@@ -19,6 +21,22 @@ class Quiz
   validates :choices, presence: true, length: { is: 5 }
   validates :correct_answer, presence: true
   validates :explanation, presence: true
+  validates :subject, presence: true, inclusion: { in: SUBJECTS }
+  validates :question_type, presence: true, inclusion: { in: QUESTION_TYPES }
+  validates :difficulty, presence: true, inclusion: { in: DIFFICULTY_LEVELS }
+
+  # Constants for validation
+  SUBJECTS = [
+    "자금세탁방지 글로벌 기준",
+    "국내 자금세탁방지 제도", 
+    "고객확인의무",
+    "고액현금거래·의심거래보고",
+    "위험평가",
+    "자금세탁방지 실무"
+  ].freeze
+
+  QUESTION_TYPES = %w[A B C].freeze
+  DIFFICULTY_LEVELS = %w[상급 중상급 최상급].freeze
 
   class << self
     def collection
@@ -56,6 +74,53 @@ class Quiz
       end
     end
 
+    def by_subject(subject)
+      return sample_quizzes.select { |quiz| quiz.subject == subject } unless FIRESTORE
+      collection.where(:subject, :==, subject).get.map do |doc|
+        new(doc.data.merge(id: doc.document_id))
+      end
+    end
+
+    def by_question_type(question_type)
+      return sample_quizzes.select { |quiz| quiz.question_type == question_type } unless FIRESTORE
+      collection.where(:question_type, :==, question_type).get.map do |doc|
+        new(doc.data.merge(id: doc.document_id))
+      end
+    end
+
+    def by_subject_type_difficulty(subject, question_type, difficulty)
+      return sample_quizzes.select { |quiz| 
+        quiz.subject == subject && 
+        quiz.question_type == question_type && 
+        quiz.difficulty == difficulty 
+      } unless FIRESTORE
+      
+      collection.where(:subject, :==, subject)
+                .where(:question_type, :==, question_type)
+                .where(:difficulty, :==, difficulty)
+                .get.map do |doc|
+        new(doc.data.merge(id: doc.document_id))
+      end
+    end
+
+    def random_by_criteria(subject: nil, question_type: nil, difficulty: nil, limit: 20)
+      quizzes = if FIRESTORE
+        query = collection
+        query = query.where(:subject, :==, subject) if subject
+        query = query.where(:question_type, :==, question_type) if question_type
+        query = query.where(:difficulty, :==, difficulty) if difficulty
+        query.get.map { |doc| new(doc.data.merge(id: doc.document_id)) }
+      else
+        filtered_quizzes = sample_quizzes
+        filtered_quizzes = filtered_quizzes.select { |q| q.subject == subject } if subject
+        filtered_quizzes = filtered_quizzes.select { |q| q.question_type == question_type } if question_type
+        filtered_quizzes = filtered_quizzes.select { |q| q.difficulty == difficulty } if difficulty
+        filtered_quizzes
+      end
+      
+      quizzes.sample(limit)
+    end
+
     def create(attributes)
       quiz = new(attributes)
       return quiz unless quiz.valid?
@@ -87,8 +152,10 @@ class Quiz
           correct_answer: "고객의 위험도에 따라 차등적으로 고객확인을 수행해야 한다",
           explanation: "자금세탁방지법에서는 위험기반접근법(RBA)을 채택하여 고객의 위험도에 따라 차등적으로 고객확인을 수행하도록 규정하고 있습니다. 고위험 고객에게는 강화된 고객확인(EDD)을, 저위험 고객에게는 간소화된 고객확인(SDD)을 적용할 수 있습니다.",
           reference: "자금세탁방지법 제4조, 제5조",
-          difficulty: "medium",
+          difficulty: "중상급",
           category: "AML",
+          subject: "고객확인의무",
+          question_type: "A",
           created_at: Time.current,
           updated_at: Time.current
         ),
@@ -106,8 +173,10 @@ class Quiz
           correct_answer: "의심거래보고 사실을 고객에게 통지해야 한다",
           explanation: "의심거래보고 사실을 고객에게 통지하는 것은 금지되어 있습니다(티핑오프 금지). 이는 수사기관의 조사를 방해하고 증거인멸 등의 위험을 초래할 수 있기 때문입니다.",
           reference: "자금세탁방지법 제8조, 제9조",
-          difficulty: "hard",
+          difficulty: "최상급",
           category: "AML",
+          subject: "고액현금거래·의심거래보고",
+          question_type: "B",
           created_at: Time.current,
           updated_at: Time.current
         ),
@@ -125,8 +194,10 @@ class Quiz
           correct_answer: "FATF는 자금세탁방지 국제기준을 제정하는 정부간 기구이다",
           explanation: "FATF(Financial Action Task Force)는 1989년 G7 정상회의에서 설립된 정부간 기구로, 자금세탁방지 및 테러자금조달 방지를 위한 국제기준을 제정하고 각국의 이행상황을 평가하는 역할을 합니다.",
           reference: "FATF 40 권고사항",
-          difficulty: "easy",
+          difficulty: "상급",
           category: "AML",
+          subject: "자금세탁방지 글로벌 기준",
+          question_type: "A",
           created_at: Time.current,
           updated_at: Time.current
         )
@@ -167,6 +238,8 @@ class Quiz
       reference: reference,
       difficulty: difficulty,
       category: category,
+      subject: subject,
+      question_type: question_type,
       created_at: created_at || Time.current,
       updated_at: Time.current
     }
