@@ -1,0 +1,135 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+          </svg>
+          <h1 class="text-2xl font-bold text-gray-900">AML Quiz</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-700">
+            <%= current_user['name'] || current_user['email'] %>
+          </span>
+          <%= link_to logout_path, method: :delete, class: "text-red-600 hover:text-red-800" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <!-- Welcome Section -->
+      <div class="bg-white overflow-hidden shadow rounded-lg mb-6">
+        <div class="px-4 py-5 sm:p-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-2">
+            안녕하세요, <%= current_user['name'] || current_user['email'] %>님!
+          </h2>
+          <p class="text-gray-600">
+            TPAC 시험 대비 AML 퀴즈로 학습을 시작하세요.
+          </p>
+        </div>
+      </div>
+
+      <!-- Active Session Card -->
+      <% if @active_session %>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+          <div class="flex items-center">
+            <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <h3 class="text-lg font-medium text-blue-900">진행 중인 퀴즈</h3>
+              <p class="text-blue-700">
+                <%= @active_session.current_quiz_index + 1 %>/<%= @active_session.total_questions %> 문제
+                (<%= @active_session.progress_percentage %>% 완료)
+              </p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <%= link_to "퀴즈 계속하기", quiz_path(@active_session.id), 
+                class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Action Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Start New Quiz -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-6">
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.5a2.5 2.5 0 110 5H9m0-5v5m0-5H7.5" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+              </svg>
+              <h3 class="text-lg font-medium text-gray-900">새 퀴즈 시작</h3>
+            </div>
+            <p class="mt-2 text-gray-600">
+              랜덤한 문제로 새로운 퀴즈 세션을 시작합니다.
+            </p>
+            <div class="mt-4">
+              <%= link_to "퀴즈 시작", new_quiz_path, 
+                  class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Study Stats -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-6">
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <h3 class="text-lg font-medium text-gray-900">학습 현황</h3>
+            </div>
+            <div class="mt-4 space-y-2">
+              <div class="flex justify-between">
+                <span class="text-gray-600">총 세션:</span>
+                <span class="font-medium"><%= @user_stats[:total_sessions] %>회</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">평균 점수:</span>
+                <span class="font-medium"><%= @user_stats[:average_score] %>점</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">최고 점수:</span>
+                <span class="font-medium"><%= @user_stats[:best_score] %>점</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Info -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">퀴즈 정보</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-blue-600">5-15점</div>
+              <div class="text-sm text-gray-600">문제별 배점</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600">10문제</div>
+              <div class="text-sm text-gray-600">세션당 문제 수</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-purple-600">5지선다</div>
+              <div class="text-sm text-gray-600">객관식 문제</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

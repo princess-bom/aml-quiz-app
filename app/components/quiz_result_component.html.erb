@@ -1,0 +1,125 @@
+<div class="max-w-4xl mx-auto p-4">
+  <!-- Result Header -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <div class="text-center mb-6">
+      <div class="mx-auto w-16 h-16 <%= result_bg_color %> rounded-full flex items-center justify-center mb-4">
+        <% if result_icon == 'check-circle' %>
+          <svg class="w-8 h-8 <%= result_color %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        <% elsif result_icon == 'x-circle' %>
+          <svg class="w-8 h-8 <%= result_color %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        <% end %>
+      </div>
+      <h2 class="text-2xl font-bold <%= result_color %> mb-2"><%= result_text %></h2>
+      <div class="text-lg text-gray-600">
+        <% if is_correct %>
+          <span class="font-semibold text-green-600">+<%= quiz.score %>점</span>
+        <% else %>
+          <span class="font-semibold text-gray-600">0점</span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Question Review -->
+    <div class="border-t pt-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">문제 검토</h3>
+      <div class="bg-gray-50 rounded-lg p-4 mb-4">
+        <p class="text-gray-800 leading-relaxed"><%= quiz.question %></p>
+      </div>
+
+      <!-- Answer Choices -->
+      <div class="space-y-3">
+        <% quiz.choices.each_with_index do |choice, index| %>
+          <div class="flex items-center p-3 border rounded-lg <%= choice_style(choice, index) %>">
+            <span class="w-8 h-8 flex items-center justify-center bg-white rounded-full text-gray-700 mr-3 font-medium border">
+              <%= quiz.choice_label(index) %>
+            </span>
+            <span class="flex-1"><%= choice %></span>
+            <% if choice_icon(choice) %>
+              <% icon_name = choice_icon(choice) %>
+              <% if icon_name == 'check-circle' %>
+                <svg class="w-5 h-5 <%= choice_icon_color(choice) %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              <% elsif icon_name == 'x-circle' %>
+                <svg class="w-5 h-5 <%= choice_icon_color(choice) %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Answer Summary -->
+      <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+        <div class="flex items-center justify-between text-sm">
+          <div>
+            <span class="text-gray-600">당신의 답:</span>
+            <span class="font-medium ml-2"><%= user_choice_label %>) <%= user_answer %></span>
+          </div>
+          <div>
+            <span class="text-gray-600">정답:</span>
+            <span class="font-medium ml-2 text-green-600"><%= quiz.correct_choice_label %>) <%= quiz.correct_answer %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Explanation -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+      <svg class="w-5 h-5 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+      </svg>
+      해설
+    </h3>
+    <div class="prose prose-sm max-w-none">
+      <p class="text-gray-700 leading-relaxed"><%= quiz.explanation %></p>
+    </div>
+    
+    <% if quiz.reference.present? %>
+      <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+        <h4 class="text-sm font-medium text-gray-900 mb-2">참고 자료</h4>
+        <p class="text-sm text-gray-600"><%= quiz.reference %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Progress & Next Action -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div class="flex items-center justify-between mb-4">
+      <div class="text-sm text-gray-600">
+        <span class="font-medium">현재 점수:</span>
+        <span class="ml-2"><%= session.score %>점</span>
+      </div>
+      <div class="text-sm text-gray-600">
+        <span class="font-medium">정답률:</span>
+        <span class="ml-2"><%= session.accuracy_percentage %>%</span>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center">
+      <div class="text-sm text-gray-500">
+        <span class="flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <%= session.remaining_questions %>개 문제 남음
+        </span>
+      </div>
+      
+      <% if session.completed? %>
+        <%= link_to "결과 확인", quiz_result_path(session.id), 
+            class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+      <% else %>
+        <%= link_to "다음 문제", quiz_path(session.id), 
+            class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <% end %>
+    </div>
+  </div>
+</div>
