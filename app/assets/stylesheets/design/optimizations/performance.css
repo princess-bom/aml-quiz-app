@@ -1,0 +1,276 @@
+/*
+ * Performance Optimizations
+ * CSS optimizations for better rendering performance
+ */
+
+/* Hardware acceleration for animations */
+.mobile-bottom-nav-item,
+.quiz-answer-option,
+.card,
+.button {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize rendering with contain property */
+.mobile-bottom-nav {
+  contain: layout style paint;
+}
+
+.mobile-header {
+  contain: layout style paint;
+}
+
+.card {
+  contain: layout style;
+}
+
+.quiz-answer-option {
+  contain: layout style;
+}
+
+/* Critical rendering optimizations */
+.mobile-bottom-nav-item {
+  will-change: transform, background-color;
+}
+
+.mobile-bottom-nav-badge {
+  will-change: transform, opacity;
+}
+
+.quiz-answer-option:hover,
+.quiz-answer-option.selected {
+  will-change: transform, background-color, border-color;
+}
+
+/* Prevent layout thrashing */
+.dashboard-stats {
+  contain: layout;
+}
+
+.subject-nav {
+  contain: layout;
+}
+
+.analytics-chart {
+  contain: layout;
+}
+
+/* Optimize font rendering */
+body {
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* High-performance scrolling */
+.main-content {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Optimize image rendering */
+img {
+  image-rendering: optimizeQuality;
+}
+
+/* GPU layer promotion for interactive elements */
+.button:hover,
+.mobile-bottom-nav-item.active {
+  transform: translateZ(0);
+}
+
+/* Preload critical animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Lazy loading placeholders */
+.content-placeholder {
+  background: linear-gradient(90deg, 
+    var(--gray-200) 25%, 
+    var(--gray-100) 50%, 
+    var(--gray-200) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Intersection Observer optimizations */
+.fade-in-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Critical CSS inlining support */
+.above-fold {
+  contain: layout style paint;
+}
+
+/* Reduce paint complexity */
+.mobile-bottom-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gray-200);
+  transform: translateZ(0);
+}
+
+/* Optimize for 60fps animations */
+@media (min-resolution: 2dppx) {
+  .mobile-bottom-nav-badge {
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Memory usage optimization */
+.large-list-container {
+  contain: strict;
+  height: 400px;
+  overflow-y: auto;
+}
+
+/* Efficient hover states */
+@media (hover: hover) {
+  .button:hover,
+  .mobile-bottom-nav-item:hover {
+    transition: all 0.15s ease;
+  }
+}
+
+@media (hover: none) {
+  .button:hover,
+  .mobile-bottom-nav-item:hover {
+    transition: none;
+  }
+}
+
+/* Optimize for different connection speeds */
+@media (max-width: 768px) and (max-resolution: 1.5dppx) {
+  /* Reduce animation complexity on slower devices */
+  .mobile-bottom-nav-badge {
+    animation-duration: 3s;
+  }
+  
+  .mobile-bottom-nav-indicator {
+    animation: none;
+  }
+}
+
+/* Critical path optimization */
+.critical-ui {
+  font-display: swap;
+  contain: layout style paint;
+}
+
+/* Reduce reflow/repaint */
+.fixed-layout {
+  position: relative;
+  contain: layout;
+}
+
+.fixed-layout * {
+  box-sizing: border-box;
+}
+
+/* Efficient transforms */
+.translate-gpu {
+  transform: translate3d(0, 0, 0);
+}
+
+/* Optimize for touch devices */
+@media (pointer: coarse) {
+  .mobile-bottom-nav-item {
+    min-height: 44px; /* Apple's recommended touch target */
+    min-width: 44px;
+  }
+  
+  .button {
+    min-height: 44px;
+    padding: var(--space-3) var(--space-6);
+  }
+  
+  .quiz-answer-option {
+    min-height: 44px;
+    padding: var(--space-4);
+  }
+}
+
+/* Progressive enhancement for modern browsers */
+@supports (backdrop-filter: blur(10px)) {
+  .mobile-header,
+  .mobile-bottom-nav {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+  }
+}
+
+@supports (overscroll-behavior: contain) {
+  .main-content {
+    overscroll-behavior: contain;
+  }
+}
+
+/* Efficient grid layouts */
+.auto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-4);
+}
+
+/* Optimize for different viewport sizes */
+@media (max-height: 600px) {
+  /* Compact layout for short screens */
+  .mobile-header {
+    height: 50px;
+  }
+  
+  .mobile-bottom-nav {
+    height: 60px;
+  }
+  
+  .main-content {
+    padding-top: 50px;
+    padding-bottom: 60px;
+  }
+}
+
+/* Prefers reduced data */
+@media (prefers-reduced-data: reduce) {
+  .mobile-bottom-nav-badge,
+  .mobile-bottom-nav-indicator {
+    animation: none;
+  }
+  
+  .content-placeholder {
+    animation: none;
+    background: var(--gray-200);
+  }
+}

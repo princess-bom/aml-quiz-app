@@ -1,0 +1,4 @@
+# Propshaft ignore file
+# Exclude design components from individual compilation
+app/assets/stylesheets/design/
+app/assets/stylesheets/design/**/*.css

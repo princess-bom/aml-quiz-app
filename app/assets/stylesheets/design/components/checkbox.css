@@ -1,0 +1,432 @@
+/* Checkbox Component Styles */
+
+/* AML Quiz Checkbox Components */
+.aml-quiz-checkbox-components {
+  box-sizing: border-box;
+
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 24px;
+
+  position: relative;
+  width: 375px;
+  height: 2090px;
+
+  background: #FFFFFF;
+  border-radius: 0px;
+}
+
+/* Base Checkbox Component */
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-box {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox-input:checked + .checkbox-box {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+}
+
+.checkbox-input:indeterminate + .checkbox-box {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+}
+
+.checkbox-input:focus + .checkbox-box {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+.checkbox-input:disabled + .checkbox-box {
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+  cursor: not-allowed;
+}
+
+.checkbox-checkmark {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.checkbox-input:checked + .checkbox-box .checkbox-checkmark,
+.checkbox-input:indeterminate + .checkbox-box .checkbox-checkmark {
+  opacity: 1;
+}
+
+.checkbox-label {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.checkbox-input:disabled ~ .checkbox-label {
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+}
+
+/* Checkbox Variants */
+.checkbox-variants {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4);
+}
+
+.checkbox--small .checkbox-box {
+  width: 16px;
+  height: 16px;
+}
+
+.checkbox--small .checkbox-checkmark {
+  font-size: 10px;
+}
+
+.checkbox--small .checkbox-label {
+  font-size: var(--text-xs);
+}
+
+.checkbox--large .checkbox-box {
+  width: 24px;
+  height: 24px;
+}
+
+.checkbox--large .checkbox-checkmark {
+  font-size: 14px;
+}
+
+.checkbox--large .checkbox-label {
+  font-size: var(--text-base);
+}
+
+/* Checkbox Quiz Variants */
+.checkbox--quiz-answer {
+  padding: var(--space-3);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.checkbox--quiz-answer:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+}
+
+.checkbox--quiz-answer .checkbox-input:checked ~ .checkbox-label {
+  color: var(--primary-600);
+  font-weight: var(--font-medium);
+}
+
+.checkbox--quiz-answer.correct {
+  background: var(--success-50);
+  border-color: var(--success-300);
+}
+
+.checkbox--quiz-answer.incorrect {
+  background: var(--error-50);
+  border-color: var(--error-300);
+}
+
+.checkbox--quiz-filter {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  transition: all 0.2s ease;
+}
+
+.checkbox--quiz-filter:hover {
+  background: var(--gray-100);
+}
+
+.checkbox--quiz-filter .checkbox-input:checked ~ .checkbox-label {
+  color: var(--primary-600);
+  font-weight: var(--font-medium);
+}
+
+.checkbox--subject-filter .checkbox-box {
+  border-color: var(--primary-300);
+}
+
+.checkbox--subject-filter .checkbox-input:checked + .checkbox-box {
+  background: var(--primary-500);
+}
+
+.checkbox--difficulty-filter .checkbox-box {
+  border-color: var(--warning-300);
+}
+
+.checkbox--difficulty-filter .checkbox-input:checked + .checkbox-box {
+  background: var(--warning-500);
+}
+
+.checkbox--type-filter .checkbox-box {
+  border-color: var(--success-300);
+}
+
+.checkbox--type-filter .checkbox-input:checked + .checkbox-box {
+  background: var(--success-500);
+}
+
+/* Checkbox Groups */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.checkbox-group-title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.checkbox-group-description {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+.checkbox-group--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.checkbox-group--horizontal .checkbox {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* Checkbox List */
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  background: var(--bg-secondary);
+}
+
+.checkbox-list-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease;
+}
+
+.checkbox-list-item:hover {
+  background: var(--gray-50);
+}
+
+/* Checkbox States */
+.checkbox--error .checkbox-box {
+  border-color: var(--error-500);
+}
+
+.checkbox--error .checkbox-label {
+  color: var(--error-600);
+}
+
+.checkbox--success .checkbox-box {
+  border-color: var(--success-500);
+}
+
+.checkbox--success .checkbox-input:checked + .checkbox-box {
+  background: var(--success-500);
+}
+
+.checkbox--warning .checkbox-box {
+  border-color: var(--warning-500);
+}
+
+.checkbox--warning .checkbox-input:checked + .checkbox-box {
+  background: var(--warning-500);
+}
+
+/* Checkbox with Description */
+.checkbox-with-description {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.checkbox-with-description .checkbox {
+  margin-bottom: var(--space-1);
+}
+
+.checkbox-description {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-left: calc(20px + var(--space-2));
+  line-height: var(--leading-relaxed);
+}
+
+/* Quiz-specific Checkbox Styles */
+.quiz-answer-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.quiz-answer-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quiz-answer-option:hover {
+  border-color: var(--primary-300);
+  background: var(--primary-50);
+}
+
+.quiz-answer-option.selected {
+  border-color: var(--primary-500);
+  background: var(--primary-50);
+}
+
+.quiz-answer-option.correct {
+  border-color: var(--success-500);
+  background: var(--success-50);
+}
+
+.quiz-answer-option.incorrect {
+  border-color: var(--error-500);
+  background: var(--error-50);
+}
+
+.quiz-answer-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--gray-600);
+  flex-shrink: 0;
+}
+
+.quiz-answer-option.selected .quiz-answer-letter {
+  background: var(--primary-500);
+  color: white;
+}
+
+.quiz-answer-option.correct .quiz-answer-letter {
+  background: var(--success-500);
+  color: white;
+}
+
+.quiz-answer-option.incorrect .quiz-answer-letter {
+  background: var(--error-500);
+  color: white;
+}
+
+.quiz-answer-text {
+  flex: 1;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  line-height: var(--leading-relaxed);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .aml-quiz-checkbox-components {
+    width: 100%;
+    max-width: 375px;
+    height: auto;
+  }
+
+  .checkbox-group--horizontal {
+    flex-direction: column;
+  }
+
+  .checkbox-list {
+    max-height: 200px;
+  }
+
+  .quiz-answer-option {
+    padding: var(--space-3);
+  }
+
+  .quiz-answer-text {
+    font-size: var(--text-sm);
+  }
+}
+
+/* Checkbox Animations */
+.checkbox-box {
+  animation: checkbox-appear 0.2s ease-out;
+}
+
+@keyframes checkbox-appear {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.checkbox-checkmark {
+  animation: checkmark-draw 0.3s ease-out;
+}
+
+@keyframes checkmark-draw {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}

@@ -1,10 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Aml Quiz App" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= content_for(:title) || "AML Quiz App" %></title>
+    
+    <!-- Enhanced Mobile Viewport -->
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+    
+    <!-- PWA and Mobile App Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="AML Quiz">
+    <meta name="application-name" content="AML Quiz">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="background-color" content="#ffffff">
+    
+    <!-- Performance and SEO -->
+    <meta name="description" content="AML (Anti-Money Laundering) 퀴즈 앱으로 TPAC 시험을 준비하세요">
+    <meta name="keywords" content="AML, 자금세탁방지법, TPAC, 퀴즈, 시험, 학습">
+    <meta name="author" content="AML Quiz App">
+    <meta name="robots" content="index,follow">
+    
+    <!-- Preconnect for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -22,9 +42,185 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="mobile-app">
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+      <div class="mobile-header-left">
+        <% if content_for?(:back_button) %>
+          <%= content_for(:back_button) %>
+        <% end %>
+        <div class="mobile-header-title">
+          <%= content_for(:page_title) || "AML Quiz" %>
+        </div>
+      </div>
+      
+      <div class="mobile-header-right">
+        <button class="mobile-header-action" type="button">
+          <span class="mobile-header-action-icon">🔔</span>
+          <span class="mobile-header-notification-badge"></span>
+        </button>
+        <button class="mobile-header-action" type="button">
+          <span class="mobile-header-action-icon">👤</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
       <%= yield %>
     </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+      <%= link_to dashboard_path, 
+          class: "mobile-bottom-nav-item #{'active' if current_page?(dashboard_path) || current_page?(root_path)}", 
+          data: { nav: 'home' } do %>
+        <span class="mobile-bottom-nav-icon">🏠</span>
+        <span class="mobile-bottom-nav-label">홈</span>
+      <% end %>
+      
+      <%= link_to quiz_selection_path, 
+          class: "mobile-bottom-nav-item #{'active' if current_page?(quiz_selection_path) || controller_name == 'quizzes' || controller_name == 'quiz_results'}", 
+          data: { nav: 'quiz' } do %>
+        <span class="mobile-bottom-nav-icon">📚</span>
+        <span class="mobile-bottom-nav-label">퀴즈</span>
+        <% if defined?(@active_quiz_sessions) && @active_quiz_sessions && @active_quiz_sessions > 0 %>
+          <span class="mobile-bottom-nav-badge mobile-bottom-nav-badge--quiz"><%= @active_quiz_sessions %></span>
+        <% end %>
+      <% end %>
+      
+      <%= link_to wrong_answers_path, 
+          class: "mobile-bottom-nav-item #{'active' if controller_name == 'wrong_answers'}", 
+          data: { nav: 'wrong_answers' } do %>
+        <span class="mobile-bottom-nav-icon">📝</span>
+        <span class="mobile-bottom-nav-label">오답노트</span>
+        <% wrong_count = defined?(@wrong_answers_count) ? @wrong_answers_count : 15 %>
+        <% if wrong_count && wrong_count > 0 %>
+          <span class="mobile-bottom-nav-badge mobile-bottom-nav-badge--wrong"><%= wrong_count %></span>
+        <% end %>
+      <% end %>
+      
+      <%= link_to analytics_path, 
+          class: "mobile-bottom-nav-item #{'active' if controller_name == 'analytics'}", 
+          data: { nav: 'analytics' } do %>
+        <span class="mobile-bottom-nav-icon">📊</span>
+        <span class="mobile-bottom-nav-label">분석</span>
+        <% if defined?(@has_new_achievements) && @has_new_achievements %>
+          <span class="mobile-bottom-nav-indicator"></span>
+        <% end %>
+      <% end %>
+    </nav>
+
+    <!-- Mobile Navigation JavaScript -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Enhanced navigation functionality
+        const navItems = document.querySelectorAll('.mobile-bottom-nav-item');
+        const currentPath = window.location.pathname;
+        
+        // Haptic feedback for mobile devices
+        function triggerHapticFeedback() {
+          if ('vibrate' in navigator) {
+            navigator.vibrate(50);
+          }
+        }
+        
+        // Add touch interaction for better mobile experience
+        navItems.forEach(item => {
+          item.addEventListener('touchstart', function(e) {
+            this.style.transform = 'translateY(0px) scale(0.95)';
+            triggerHapticFeedback();
+          }, { passive: true });
+          
+          item.addEventListener('touchend', function(e) {
+            if (this.classList.contains('active')) {
+              this.style.transform = 'translateY(-2px) scale(1)';
+            } else {
+              this.style.transform = 'translateY(0px) scale(1)';
+            }
+          }, { passive: true });
+          
+          item.addEventListener('touchcancel', function(e) {
+            if (this.classList.contains('active')) {
+              this.style.transform = 'translateY(-2px) scale(1)';
+            } else {
+              this.style.transform = 'translateY(0px) scale(1)';
+            }
+          }, { passive: true });
+        });
+        
+        // Badge animation control
+        const badges = document.querySelectorAll('.mobile-bottom-nav-badge');
+        badges.forEach(badge => {
+          // Reduce animation after user interaction
+          const navItem = badge.closest('.mobile-bottom-nav-item');
+          if (navItem) {
+            navItem.addEventListener('click', function() {
+              badge.style.animationDuration = '4s';
+              setTimeout(() => {
+                badge.style.animationDuration = '2s';
+              }, 8000);
+            });
+          }
+        });
+        
+        // Add loading state for navigation transitions
+        function addLoadingState(element) {
+          const icon = element.querySelector('.mobile-bottom-nav-icon');
+          const originalIcon = icon.textContent;
+          icon.textContent = '⏳';
+          
+          setTimeout(() => {
+            icon.textContent = originalIcon;
+          }, 500);
+        }
+        
+        // Handle navigation clicks with loading state
+        navItems.forEach(item => {
+          item.addEventListener('click', function(e) {
+            if (!this.classList.contains('active')) {
+              addLoadingState(this);
+            }
+          });
+        });
+        
+        // Progressive enhancement for better performance
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => {
+            // Initialize additional features when browser is idle
+            initializeAdvancedFeatures();
+          });
+        } else {
+          setTimeout(initializeAdvancedFeatures, 100);
+        }
+        
+        function initializeAdvancedFeatures() {
+          // Add swipe gestures for navigation (if supported)
+          if ('ontouchstart' in window) {
+            let startX = null;
+            
+            document.addEventListener('touchstart', e => {
+              startX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            document.addEventListener('touchend', e => {
+              if (!startX) return;
+              
+              const endX = e.changedTouches[0].clientX;
+              const diffX = startX - endX;
+              const threshold = 50;
+              
+              if (Math.abs(diffX) > threshold) {
+                // Swipe gesture detected - could implement tab switching here
+                triggerHapticFeedback();
+              }
+              
+              startX = null;
+            }, { passive: true });
+          }
+        }
+      });
+    </script>
+
   </body>
 </html>

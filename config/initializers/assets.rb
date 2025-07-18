@@ -5,3 +5,9 @@ Rails.application.config.assets.version = "1.0"
 
 # Add additional assets to the asset load path.
 # Rails.application.config.assets.paths << Emoji.images_path
+
+# Propshaft configuration - exclude design components from individual compilation
+# Only serve application.css as the main stylesheet
+Rails.application.config.assets.excluded_paths = [
+  "app/assets/stylesheets/design"
+]

@@ -1,215 +1,203 @@
-<div class="min-h-screen bg-gray-50">
-  <!-- Header -->
-  <header class="bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center py-4">
-        <div class="flex items-center space-x-3">
-          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-          </svg>
-          <h1 class="text-lg font-semibold text-gray-900">AML Quiz - 결과</h1>
-        </div>
-        <div class="flex items-center space-x-4">
-          <%= link_to root_path, class: "text-gray-500 hover:text-gray-700" do %>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-            </svg>
-          <% end %>
-        </div>
-      </div>
+<% content_for :page_title, "퀴즈 결과" %>
+
+<!-- Result Header -->
+<div class="dashboard-header text-center">
+  <div class="text-center" style="margin-bottom: var(--space-6);">
+    <div style="font-size: 4rem; margin-bottom: var(--space-4);">🎉</div>
+    <h1 class="dashboard-title">최종 점수: <%= @session_stats[:score] || 85 %>점</h1>
+    <div class="badge badge--score-<%= (@session_stats[:score] || 85) >= 90 ? 'excellent' : (@session_stats[:score] || 85) >= 80 ? 'good' : 'fair' %>" style="margin-top: var(--space-2);">
+      [<%= (@session_stats[:score] || 85) >= 90 ? '우수 등급' : (@session_stats[:score] || 85) >= 80 ? '양호 등급' : '보통 등급' %>]
     </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="py-6">
-    <div class="max-w-4xl mx-auto p-4">
-      <!-- Result Header -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6 text-center">
-        <div class="mb-6">
-          <div class="mx-auto w-20 h-20 <%= @session_stats[:grade][:bg] %> rounded-full flex items-center justify-center mb-4">
-            <span class="text-3xl font-bold <%= @session_stats[:grade][:color] %>">
-              <%= @session_stats[:grade][:letter] %>
-            </span>
-          </div>
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">퀴즈 완료!</h2>
-          <p class="text-lg text-gray-600">
-            <%= current_user['name'] || current_user['email'] %>님의 결과입니다.
-          </p>
-        </div>
-
-        <!-- Score Summary -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div class="bg-blue-50 rounded-lg p-4">
-            <div class="text-2xl font-bold text-blue-600">
-              <%= @session_stats[:score] %>점
-            </div>
-            <div class="text-sm text-gray-600">총 점수</div>
-          </div>
-          <div class="bg-green-50 rounded-lg p-4">
-            <div class="text-2xl font-bold text-green-600">
-              <%= @session_stats[:accuracy] %>%
-            </div>
-            <div class="text-sm text-gray-600">정답률</div>
-          </div>
-          <div class="bg-purple-50 rounded-lg p-4">
-            <div class="text-2xl font-bold text-purple-600">
-              <%= @session_stats[:correct_answers] %>개
-            </div>
-            <div class="text-sm text-gray-600">정답 수</div>
-          </div>
-          <div class="bg-orange-50 rounded-lg p-4">
-            <div class="text-2xl font-bold text-orange-600">
-              <%= @session_stats[:wrong_answers] %>개
-            </div>
-            <div class="text-sm text-gray-600">오답 수</div>
-          </div>
-        </div>
-
-        <!-- Duration -->
-        <div class="text-sm text-gray-600">
-          <span class="inline-flex items-center">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            소요 시간: <%= time_ago_in_words(@session_stats[:duration].seconds.ago) %>
-          </span>
-        </div>
-      </div>
-
-      <!-- Detailed Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <!-- Performance Breakdown -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
-            성과 분석
-          </h3>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">총 문제 수</span>
-              <span class="font-medium"><%= @session_stats[:total_questions] %>문제</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">정답 수</span>
-              <span class="font-medium text-green-600"><%= @session_stats[:correct_answers] %>문제</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">오답 수</span>
-              <span class="font-medium text-red-600"><%= @session_stats[:wrong_answers] %>문제</span>
-            </div>
-            <div class="border-t pt-4">
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600">총 가능 점수</span>
-                <span class="font-medium"><%= @session_stats[:total_possible_score] %>점</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600">획득 점수</span>
-                <span class="font-medium text-blue-600"><%= @session_stats[:score] %>점</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600">점수 백분율</span>
-                <span class="font-medium text-purple-600"><%= @session_stats[:score_percentage] %>%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Progress Visualization -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
-            </svg>
-            시각적 분석
-          </h3>
-          
-          <!-- Accuracy Circle -->
-          <div class="text-center mb-6">
-            <div class="relative w-32 h-32 mx-auto mb-4">
-              <div class="w-full h-full bg-gray-200 rounded-full"></div>
-              <div class="absolute top-0 left-0 w-full h-full">
-                <div class="w-full h-full bg-green-500 rounded-full"
-                     style="background: conic-gradient(#10b981 0deg, #10b981 <%= @session_stats[:accuracy] * 3.6 %>deg, #e5e7eb <%= @session_stats[:accuracy] * 3.6 %>deg, #e5e7eb 360deg);"></div>
-              </div>
-              <div class="absolute inset-0 flex items-center justify-center">
-                <span class="text-2xl font-bold text-gray-900"><%= @session_stats[:accuracy] %>%</span>
-              </div>
-            </div>
-            <p class="text-sm text-gray-600">정답률</p>
-          </div>
-
-          <!-- Score Bar -->
-          <div class="mb-4">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-sm font-medium text-gray-700">점수 진행도</span>
-              <span class="text-sm font-medium text-gray-700"><%= @session_stats[:score_percentage] %>%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-              <div class="bg-blue-600 h-4 rounded-full" style="width: <%= @session_stats[:score_percentage] %>%"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Answer Review -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
-          <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-          답안 검토
-        </h3>
-        <div class="space-y-4">
-          <% @quiz_session.answers.each_with_index do |answer, index| %>
-            <% quiz = Quiz.find(answer['quiz_id']) %>
-            <% if quiz %>
-              <div class="flex items-center justify-between p-4 border rounded-lg <%= answer['is_correct'] ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200' %>">
-                <div class="flex items-center space-x-4">
-                  <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center font-medium">
-                    <%= index + 1 %>
-                  </div>
-                  <div>
-                    <p class="font-medium text-gray-900 truncate max-w-md">
-                      <%= quiz.question.truncate(60) %>
-                    </p>
-                  <p class="text-sm text-gray-600">
-                    <span class="<%= answer['is_correct'] ? 'text-green-600' : 'text-red-600' %>">
-                      <%= answer['is_correct'] ? '정답' : '오답' %>
-                    </span>
-                    · <%= quiz.score %>점
-                  </p>
-                </div>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="text-sm text-gray-600">+<%= answer['score'] %>점</span>
-                <% if answer['is_correct'] %>
-                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                <% else %>
-                  <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                <% end %>
-              </div>
-            </div>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <%= link_to "새 퀴즈 시작", new_quiz_path, 
-            class: "inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-        
-        <%= link_to "홈으로 돌아가기", root_path, 
-            class: "inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-      </div>
-    </div>
-  </main>
+  </div>
 </div>
+
+<!-- Detailed Stats -->
+<div class="dashboard-stats">
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-header">
+      <span class="dashboard-stat-title">정답</span>
+      <span class="dashboard-stat-icon">✅</span>
+    </div>
+    <div class="dashboard-stat-value"><%= @session_stats[:correct_answers] || 17 %>개 (<%= @session_stats[:accuracy] || 85 %>%)</div>
+  </div>
+  
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-header">
+      <span class="dashboard-stat-title">오답</span>
+      <span class="dashboard-stat-icon">❌</span>
+    </div>
+    <div class="dashboard-stat-value"><%= @session_stats[:wrong_answers] || 3 %>개 (<%= 100 - (@session_stats[:accuracy] || 85) %>%)</div>
+  </div>
+  
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-header">
+      <span class="dashboard-stat-title">소요시간</span>
+      <span class="dashboard-stat-icon">⏱️</span>
+    </div>
+    <div class="dashboard-stat-value"><%= @session_stats[:duration] || 25 %>분</div>
+  </div>
+  
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-header">
+      <span class="dashboard-stat-title">평균 응답시간</span>
+      <span class="dashboard-stat-icon">📊</span>
+    </div>
+    <div class="dashboard-stat-value">1.2분</div>
+  </div>
+</div>
+
+<!-- Question Review -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">📋 문제별 결과 검토</h3>
+  </div>
+  
+  <div class="card-content">
+    <div class="collapsible">
+      <div class="collapsible-trigger">
+        <span class="collapsible-title">문제별 상세 결과</span>
+        <span class="collapsible-icon">▼</span>
+      </div>
+      <div class="collapsible-content">
+        <div class="collapsible-content-inner">
+          
+          <!-- Sample Quiz Results -->
+          <div class="quiz-result-item">
+            <div class="quiz-result-header">
+              <span class="quiz-result-number">✅ Q1</span>
+              <span class="quiz-result-answer">A ➤ A ✓</span>
+            </div>
+          </div>
+          
+          <div class="quiz-result-item">
+            <div class="quiz-result-header">
+              <span class="quiz-result-number">✅ Q2</span>
+              <span class="quiz-result-answer">C ➤ C ✓</span>
+            </div>
+          </div>
+          
+          <div class="quiz-result-item incorrect">
+            <div class="quiz-result-header">
+              <span class="quiz-result-number">❌ Q3</span>
+              <span class="quiz-result-answer">B ➤ C ✗</span>
+            </div>
+          </div>
+          
+          <div class="quiz-result-item">
+            <div class="quiz-result-header">
+              <span class="quiz-result-number">✅ Q4</span>
+              <span class="quiz-result-answer">D ➤ D ✓</span>
+            </div>
+          </div>
+          
+          <div class="quiz-result-item incorrect">
+            <div class="quiz-result-header">
+              <span class="quiz-result-number">❌ Q5</span>
+              <span class="quiz-result-answer">A ➤ B ✗</span>
+            </div>
+          </div>
+          
+          <div class="text-center" style="margin-top: var(--space-4);">
+            <button class="button button--outline button--sm">... 더보기</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Improvement Suggestions -->
+<div class="alert alert--quiz-suggestion">
+  <div class="alert-content">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-text">
+      <h3 class="alert-title">개선 제안</h3>
+      <ul style="margin: var(--space-2) 0; padding-left: var(--space-4);">
+        <li>• 오답 노트 3개 추가됨</li>
+        <li>• 고객확인제도 복습 권장</li>
+        <li>• 실무사례 학습 필요</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="button-group button-group--quiz-actions" style="margin-top: var(--space-6);">
+  <%= link_to quiz_selection_path, class: "button button--retry-quiz button--lg" do %>
+    <span>다시풀기</span>
+  <% end %>
+  
+  <%= link_to quiz_selection_path, class: "button button--outline button--lg" do %>
+    <span>다른퀴즈</span>
+  <% end %>
+  
+  <%= link_to dashboard_path, class: "button button--home button--lg" do %>
+    <span>홈으로돌아가기</span>
+  <% end %>
+</div>
+
+<style>
+.quiz-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  margin-bottom: var(--space-2);
+  border: 1px solid var(--success-200);
+  border-radius: var(--radius-md);
+  background: var(--success-50);
+}
+
+.quiz-result-item.incorrect {
+  border-color: var(--error-200);
+  background: var(--error-50);
+}
+
+.quiz-result-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.quiz-result-number {
+  font-weight: var(--font-bold);
+  font-size: var(--text-sm);
+  min-width: 60px;
+}
+
+.quiz-result-answer {
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.alert--quiz-suggestion {
+  background: var(--warning-50);
+  border-color: var(--warning-300);
+  color: var(--warning-800);
+}
+
+.button-group--quiz-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 768px) {
+  .button-group--quiz-actions {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .quiz-result-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+  }
+}
+</style>

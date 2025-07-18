@@ -1,0 +1,397 @@
+<% content_for :page_title, "퀴즈 선택" %>
+<% content_for :back_button do %>
+  <%= link_to dashboard_path, class: "mobile-header-back" do %>
+    <span class="mobile-header-back-icon">←</span>
+  <% end %>
+<% end %>
+
+<!-- Quiz System Header -->
+<div class="dashboard-header text-center">
+  <h1 class="dashboard-title">🎯 AML 퀴즈 시스템</h1>
+  <p class="dashboard-subtitle">6과목 • 54개 퀴즈<br>20문제 객관식 형태</p>
+</div>
+
+<!-- Recommended Quizzes -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">📋 추천 퀴즈</h3>
+  </div>
+  <div class="card-content">
+    
+    <!-- Recommended Quiz 1 -->
+    <%= link_to quiz_path(1), class: "subject-nav-card subject-nav-card--subject-1" do %>
+      <div class="subject-nav-card-header">
+        <div class="subject-nav-card-icon">🔵</div>
+        <div class="subject-nav-card-title">자금세탁방지법</div>
+        <span class="quiz-nav-action">▶️</span>
+      </div>
+      <div class="subject-nav-card-stats">
+        <span>평균 82점</span>
+        <span>85% 완료</span>
+      </div>
+      <div class="subject-nav-card-progress">
+        <div class="subject-nav-card-progress-fill" style="width: 85%"></div>
+      </div>
+      <div class="badge-subjects-container" style="margin-top: var(--space-3);">
+        <span class="badge badge--aml-global">즐겨찾기⭐</span>
+        <span class="badge badge--primary">최근📅</span>
+      </div>
+    <% end %>
+
+    <!-- Recommended Quiz 2 -->
+    <%= link_to quiz_path(4), class: "subject-nav-card subject-nav-card--subject-4" do %>
+      <div class="subject-nav-card-header">
+        <div class="subject-nav-card-icon">🟠</div>
+        <div class="subject-nav-card-title">고객관리</div>
+        <span class="quiz-nav-action">▶️</span>
+      </div>
+      <div class="subject-nav-card-stats">
+        <span>평균 65점</span>
+        <span>40% 완료</span>
+      </div>
+      <div class="subject-nav-card-progress">
+        <div class="subject-nav-card-progress-fill" style="width: 40%"></div>
+      </div>
+      <div class="badge-subjects-container" style="margin-top: var(--space-3);">
+        <span class="badge badge--error">개선필요⚠️</span>
+      </div>
+    <% end %>
+
+  </div>
+</div>
+
+<!-- All Subjects -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">📚 전체 과목 목록</h3>
+  </div>
+  <div class="card-content">
+    <div class="subject-nav">
+      
+      <!-- Subject 1: 자금세탁방지법 -->
+      <%= link_to "#", class: "subject-nav-card subject-nav-card--subject-1", 
+          data: { subject: "자금세탁방지법" } do %>
+        <div class="subject-nav-card-header">
+          <div class="subject-nav-card-icon">🔵</div>
+          <div class="subject-nav-card-title">자금세탁방지법</div>
+          <span class="quiz-nav-action">▶️</span>
+        </div>
+        <div class="subject-nav-card-stats">
+          <span>평균 82점</span>
+          <span>85% 완료</span>
+        </div>
+        <div class="subject-nav-card-progress">
+          <div class="subject-nav-card-progress-fill" style="width: 85%"></div>
+        </div>
+      <% end %>
+
+      <!-- Subject 2: 고객확인제도 -->
+      <%= link_to "#", class: "subject-nav-card subject-nav-card--subject-2", 
+          data: { subject: "고객확인제도" } do %>
+        <div class="subject-nav-card-header">
+          <div class="subject-nav-card-icon">🟣</div>
+          <div class="subject-nav-card-title">고객확인제도</div>
+          <span class="quiz-nav-action">▶️</span>
+        </div>
+        <div class="subject-nav-card-stats">
+          <span>평균 78점</span>
+          <span>72% 완료</span>
+        </div>
+        <div class="subject-nav-card-progress">
+          <div class="subject-nav-card-progress-fill" style="width: 72%"></div>
+        </div>
+      <% end %>
+
+      <!-- Subject 3: 의심거래 신고 -->
+      <%= link_to "#", class: "subject-nav-card subject-nav-card--subject-3", 
+          data: { subject: "의심거래 신고" } do %>
+        <div class="subject-nav-card-header">
+          <div class="subject-nav-card-icon">🟢</div>
+          <div class="subject-nav-card-title">의심거래 신고</div>
+          <span class="quiz-nav-action">▶️</span>
+        </div>
+        <div class="subject-nav-card-stats">
+          <span>평균 92점</span>
+          <span>90% 완료</span>
+        </div>
+        <div class="subject-nav-card-progress">
+          <div class="subject-nav-card-progress-fill" style="width: 90%"></div>
+        </div>
+      <% end %>
+
+      <!-- Subject 4: 고객관리 -->
+      <%= link_to "#", class: "subject-nav-card subject-nav-card--subject-4", 
+          data: { subject: "고객관리" } do %>
+        <div class="subject-nav-card-header">
+          <div class="subject-nav-card-icon">🟠</div>
+          <div class="subject-nav-card-title">고객관리</div>
+          <span class="quiz-nav-action">▶️</span>
+        </div>
+        <div class="subject-nav-card-stats">
+          <span>평균 65점</span>
+          <span>40% 완료</span>
+        </div>
+        <div class="subject-nav-card-progress">
+          <div class="subject-nav-card-progress-fill" style="width: 40%"></div>
+        </div>
+      <% end %>
+
+      <!-- Subject 5: 내부통제 -->
+      <%= link_to "#", class: "subject-nav-card subject-nav-card--subject-5", 
+          data: { subject: "내부통제" } do %>
+        <div class="subject-nav-card-header">
+          <div class="subject-nav-card-icon">🔴</div>
+          <div class="subject-nav-card-title">내부통제</div>
+          <span class="quiz-nav-action">▶️</span>
+        </div>
+        <div class="subject-nav-card-stats">
+          <span>평균 45점</span>
+          <span>30% 완료</span>
+        </div>
+        <div class="subject-nav-card-progress">
+          <div class="subject-nav-card-progress-fill" style="width: 30%"></div>
+        </div>
+      <% end %>
+
+      <!-- Subject 6: 금융감독 -->
+      <%= link_to "#", class: "subject-nav-card subject-nav-card--subject-6", 
+          data: { subject: "금융감독" } do %>
+        <div class="subject-nav-card-header">
+          <div class="subject-nav-card-icon">🟦</div>
+          <div class="subject-nav-card-title">금융감독</div>
+          <span class="quiz-nav-action">▶️</span>
+        </div>
+        <div class="subject-nav-card-stats">
+          <span>평균 30점</span>
+          <span>20% 완료</span>
+        </div>
+        <div class="subject-nav-card-progress">
+          <div class="subject-nav-card-progress-fill" style="width: 20%"></div>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>
+
+<!-- Search and Filter -->
+<div class="form-group">
+  <div class="search-form">
+    <input type="text" class="search-form-input" placeholder="과목 또는 키워드 검색...">
+    <button class="search-form-button" type="button">
+      <span class="search-form-icon">🔍</span>
+    </button>
+  </div>
+</div>
+
+<div class="button-group" style="margin-top: var(--space-4);">
+  <button class="button button--outline">🔍 검색</button>
+  <button class="button button--outline">🎯 필터</button>
+</div>
+
+<!-- Subject Detail Modal Template (Hidden by default) -->
+<div id="subject-modal" class="dialog-overlay">
+  <div class="dialog dialog--large">
+    <div class="dialog-header">
+      <h2 class="dialog-title" id="modal-subject-title">자금세탁방지법</h2>
+      <button class="dialog-close" type="button" onclick="closeSubjectModal()">
+        <span class="dialog-close-icon">✕</span>
+      </button>
+    </div>
+    
+    <div class="dialog-content">
+      <div class="dashboard-stats">
+        <div class="dashboard-stat-card">
+          <div class="dashboard-stat-title">평균 점수</div>
+          <div class="dashboard-stat-value" id="modal-avg-score">82점</div>
+        </div>
+        <div class="dashboard-stat-card">
+          <div class="dashboard-stat-title">완료율</div>
+          <div class="dashboard-stat-value" id="modal-completion">85%</div>
+        </div>
+        <div class="dashboard-stat-card">
+          <div class="dashboard-stat-title">최근 학습</div>
+          <div class="dashboard-stat-value">2시간 전</div>
+        </div>
+      </div>
+
+      <h3 class="card-title" style="margin: var(--space-6) 0 var(--space-4) 0;">📝 유형별 퀴즈 선택</h3>
+
+      <!-- Basic Level -->
+      <div class="collapsible">
+        <div class="collapsible-trigger">
+          <span class="collapsible-title">
+            💡 기초 (이론 중심)
+          </span>
+          <span class="collapsible-icon">▼</span>
+        </div>
+        <div class="collapsible-content">
+          <div class="collapsible-content-inner">
+            <div class="button-group button-group--quiz-actions">
+              <div class="quiz-level-item">
+                <div class="badge badge--easy">초급</div>
+                <div class="dashboard-stat-value" style="font-size: var(--text-lg);">✅ 85점</div>
+                <div class="dashboard-subtitle">20문제</div>
+                <%= link_to "시작", "#", class: "button button--sm button--success" %>
+              </div>
+              <div class="quiz-level-item">
+                <div class="badge badge--medium">중급</div>
+                <div class="dashboard-stat-value" style="font-size: var(--text-lg);">✅ 78점</div>
+                <div class="dashboard-subtitle">20문제</div>
+                <%= link_to "시작", "#", class: "button button--sm button--success" %>
+              </div>
+              <div class="quiz-level-item">
+                <div class="badge badge--hard">고급</div>
+                <div class="dashboard-stat-value" style="font-size: var(--text-lg);">▶️ 시작</div>
+                <div class="dashboard-subtitle">20문제</div>
+                <%= link_to "시작", "#", class: "button button--sm button--primary" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Applied Level -->
+      <div class="collapsible">
+        <div class="collapsible-trigger">
+          <span class="collapsible-title">
+            🔧 응용 (실무 중심)
+          </span>
+          <span class="collapsible-icon">▼</span>
+        </div>
+        <div class="collapsible-content">
+          <div class="collapsible-content-inner">
+            <div class="button-group button-group--quiz-actions">
+              <div class="quiz-level-item">
+                <div class="badge badge--easy">초급</div>
+                <div class="dashboard-stat-value" style="font-size: var(--text-lg);">✅ 92점</div>
+                <div class="dashboard-subtitle">20문제</div>
+                <%= link_to "시작", "#", class: "button button--sm button--success" %>
+              </div>
+              <div class="quiz-level-item">
+                <div class="badge badge--medium">중급</div>
+                <div class="dashboard-stat-value" style="font-size: var(--text-lg);">▶️ 시작</div>
+                <div class="dashboard-subtitle">20문제</div>
+                <%= link_to "시작", "#", class: "button button--sm button--primary" %>
+              </div>
+              <div class="quiz-level-item">
+                <div class="badge badge--hard">고급</div>
+                <div class="dashboard-stat-value" style="font-size: var(--text-lg);">🔒 잠금</div>
+                <div class="dashboard-subtitle">20문제</div>
+                <button class="button button--sm button--secondary" disabled>잠금</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Level -->
+      <div class="collapsible">
+        <div class="collapsible-trigger">
+          <span class="collapsible-title">
+            🚀 심화 (종합 응용)
+          </span>
+          <span class="collapsible-icon">▼</span>
+        </div>
+        <div class="collapsible-content">
+          <div class="collapsible-content-inner">
+            <div class="button-group button-group--quiz-actions">
+              <div class="quiz-level-item">
+                <div class="badge badge--easy">초급</div>
+                <div class="dashboard-stat-value" style="font-size: var(--text-lg);">▶️ 시작</div>
+                <div class="dashboard-subtitle">20문제</div>
+                <%= link_to "시작", "#", class: "button button--sm button--primary" %>
+              </div>
+              <div class="quiz-level-item">
+                <div class="badge badge--medium">중급</div>
+                <div class="dashboard-stat-value" style="font-size: var(--text-lg);">🔒 잠금</div>
+                <div class="dashboard-subtitle">20문제</div>
+                <button class="button button--sm button--secondary" disabled>잠금</button>
+              </div>
+              <div class="quiz-level-item">
+                <div class="badge badge--hard">고급</div>
+                <div class="dashboard-stat-value" style="font-size: var(--text-lg);">🔒 잠금</div>
+                <div class="dashboard-subtitle">20문제</div>
+                <button class="button button--sm button--secondary" disabled>잠금</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Summary -->
+      <div class="card" style="margin-top: var(--space-6);">
+        <div class="card-header">
+          <h3 class="card-title">📊 성과 요약</h3>
+        </div>
+        <div class="card-content">
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: var(--space-2);">• 완료한 퀴즈: 5/9</li>
+            <li style="margin-bottom: var(--space-2);">• 평균 점수: 82점</li>
+            <li style="margin-bottom: var(--space-2);">• 취약 영역: 심화 과정</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.quiz-level-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  flex: 1;
+}
+
+.button-group--quiz-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .button-group--quiz-actions {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+function openSubjectModal(subjectName) {
+  const modal = document.getElementById('subject-modal');
+  const title = document.getElementById('modal-subject-title');
+  title.textContent = subjectName;
+  modal.classList.add('open');
+}
+
+function closeSubjectModal() {
+  const modal = document.getElementById('subject-modal');
+  modal.classList.remove('open');
+}
+
+// Add click handlers to subject cards
+document.addEventListener('DOMContentLoaded', function() {
+  const subjectCards = document.querySelectorAll('[data-subject]');
+  subjectCards.forEach(card => {
+    card.addEventListener('click', function(e) {
+      e.preventDefault();
+      const subjectName = this.dataset.subject;
+      openSubjectModal(subjectName);
+    });
+  });
+  
+  // Close modal when clicking overlay
+  document.getElementById('subject-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeSubjectModal();
+    }
+  });
+});
+</script>

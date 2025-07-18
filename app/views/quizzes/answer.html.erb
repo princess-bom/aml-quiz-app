@@ -1,68 +1,165 @@
-<div class="min-h-screen bg-gray-50">
-  <!-- Header -->
-  <header class="bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center py-4">
-        <div class="flex items-center space-x-3">
-          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-          </svg>
-          <h1 class="text-lg font-semibold text-gray-900">AML Quiz</h1>
+<% content_for :page_title, "퀴즈" %>
+<% content_for :back_button do %>
+  <%= link_to quiz_selection_path, class: "mobile-header-back" do %>
+    <span class="mobile-header-back-icon">←</span>
+  <% end %>
+<% end %>
+
+<!-- Answer Result Alert -->
+<% if @is_correct %>
+  <div class="alert alert--quiz-success">
+    <div class="alert-content">
+      <div class="alert-icon">✅</div>
+      <div class="alert-text">
+        <h3 class="alert-title">정답입니다!</h3>
+        <p class="alert-description">+<%= @current_quiz&.points || 5 %>점 획득</p>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert--quiz-incorrect">
+    <div class="alert-content">
+      <div class="alert-icon">❌</div>
+      <div class="alert-text">
+        <h3 class="alert-title">틀렸습니다</h3>
+        <p class="alert-description">오답 노트에 추가되었습니다</p>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<!-- Answer Review -->
+<div class="card card--<%= @is_correct ? 'quiz' : 'wrong-answer' %>">
+  <div class="card-header">
+    <h3 class="card-title">정답 확인</h3>
+  </div>
+  
+  <div class="card-content">
+    <div class="dashboard-stats">
+      <div class="dashboard-stat-card">
+        <div class="dashboard-stat-title">정답</div>
+        <div class="dashboard-stat-value" style="color: var(--success-600);">
+          <%= @current_quiz&.correct_answer || "C" %>. <%= @current_quiz&.answer_text || "1000만원 이상" %>
         </div>
-        <div class="flex items-center space-x-4">
-          <div class="text-sm text-gray-600">
-            <span class="font-medium"><%= @quiz_session.score %>점</span>
-            <span class="mx-1">|</span>
-            <span><%= @quiz_session.correct_answers %>/<%= @quiz_session.current_quiz_index %> 정답</span>
-          </div>
-          <%= link_to root_path, class: "text-gray-500 hover:text-gray-700" do %>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          <% end %>
+      </div>
+      
+      <div class="dashboard-stat-card">
+        <div class="dashboard-stat-title">당신의 답안</div>
+        <div class="dashboard-stat-value" style="color: <%= @is_correct ? 'var(--success-600)' : 'var(--error-600)' %>;">
+          <%= @selected_answer || "C" %>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</div>
 
-  <!-- Main Content -->
-  <main class="py-6">
-    <%= render QuizResultComponent.new(
-          quiz: @current_quiz, 
-          session: @quiz_session, 
-          user_answer: @selected_answer, 
-          is_correct: @is_correct
-        ) %>
-  </main>
-
-  <% if @show_completion %>
-    <!-- Completion Modal Trigger -->
-    <div data-controller="modal" data-modal-show-value="true">
-      <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-          <div class="mt-3 text-center">
-            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mt-2">
-              퀴즈 완료!
-            </h3>
-            <div class="mt-2 px-7 py-3">
-              <p class="text-sm text-gray-500">
-                모든 문제를 완료했습니다. 최종 결과를 확인하세요.
-              </p>
-            </div>
-            <div class="items-center px-4 py-3">
-              <%= link_to "결과 확인", quiz_result_path(@quiz_session.id), 
-                  class: "px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300" %>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- Explanation -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">💡 해설</h3>
+  </div>
+  
+  <div class="card-content">
+    <p class="quiz-explanation">
+      <%= @current_quiz&.explanation || "자금세탁방지법 제4조에 따라 1000만원 이상의 거래 시 고객확인의무가 발생합니다. 이는 금융기관의 핵심 의무사항 중 하나입니다." %>
+    </p>
+    
+    <div style="margin-top: var(--space-4);">
+      <h4 class="card-title">📚 관련 법조문</h4>
+      <ul style="margin: var(--space-2) 0; padding-left: var(--space-4);">
+        <li>• 자금세탁방지법 제4조</li>
+        <li>• 시행령 제7조</li>
+      </ul>
     </div>
+  </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="button-group" style="margin-top: var(--space-6);">
+  <% if @quiz_session&.current_quiz_index && @quiz_session.current_quiz_index < 20 %>
+    <%= link_to next_question_path(@quiz_session), class: "button button--next-question button--lg w-full" do %>
+      다음 문제
+    <% end %>
+  <% else %>
+    <%= link_to quiz_result_path(@quiz_session), class: "button button--view-results button--lg w-full" do %>
+      결과 보기
+    <% end %>
   <% end %>
 </div>
+
+<!-- Additional Actions -->
+<div class="button-group button-group--horizontal" style="margin-top: var(--space-4);">
+  <button class="button button--outline" onclick="toggleBookmark()">
+    <span>🔖</span>
+    <span>북마크</span>
+  </button>
+  
+  <button class="button button--outline" onclick="addNote()">
+    <span>📝</span>
+    <span>메모</span>
+  </button>
+</div>
+
+<!-- Quiz Completion Modal -->
+<% if @show_completion %>
+  <div class="dialog-overlay open">
+    <div class="dialog dialog--confirmation success">
+      <div class="dialog-content">
+        <div class="dialog-icon">🎉</div>
+        <h3 class="dialog-title">퀴즈 완료!</h3>
+        <p class="dialog-message">
+          모든 문제를 완료했습니다.<br>
+          최종 결과를 확인하세요.
+        </p>
+      </div>
+      
+      <div class="dialog-footer">
+        <%= link_to quiz_result_path(@quiz_session), class: "button button--success button--lg" do %>
+          결과 확인
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<style>
+.quiz-explanation {
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.alert--quiz-success {
+  background: var(--success-50);
+  border-color: var(--success-300);
+  color: var(--success-800);
+}
+
+.alert--quiz-incorrect {
+  background: var(--error-50);
+  border-color: var(--error-300);
+  color: var(--error-800);
+}
+</style>
+
+<script>
+function toggleBookmark() {
+  const button = event.target.closest('button');
+  const icon = button.querySelector('span:first-child');
+  
+  if (icon.textContent === '🔖') {
+    icon.textContent = '📑';
+    button.classList.add('active');
+  } else {
+    icon.textContent = '🔖';
+    button.classList.remove('active');
+  }
+}
+
+function addNote() {
+  const note = prompt('이 문제에 대한 메모를 추가하세요:');
+  if (note) {
+    alert('메모가 저장되었습니다: ' + note);
+  }
+}
+</script>

@@ -1,0 +1,514 @@
+/* Collapsible Component Styles */
+
+/* AML Quiz Collapsible Components */
+.aml-quiz-collapsible-components {
+  box-sizing: border-box;
+
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 24px;
+
+  position: relative;
+  width: 375px;
+  height: 2532px;
+
+  background: #FFFFFF;
+  border-radius: 0px;
+}
+
+/* Base Collapsible Component */
+.collapsible {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.collapsible--open {
+  box-shadow: var(--shadow-md);
+}
+
+.collapsible-trigger {
+  width: 100%;
+  padding: var(--space-4);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+}
+
+.collapsible-trigger:hover {
+  background: var(--gray-50);
+}
+
+.collapsible-trigger:focus {
+  outline: 2px solid var(--primary-500);
+  outline-offset: -2px;
+}
+
+.collapsible-title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.collapsible-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+  color: var(--text-secondary);
+}
+
+.collapsible--open .collapsible-icon {
+  transform: rotate(180deg);
+}
+
+.collapsible-content {
+  overflow: hidden;
+  transition: all 0.3s ease;
+  max-height: 0;
+}
+
+.collapsible--open .collapsible-content {
+  max-height: 1000px;
+}
+
+.collapsible-content-inner {
+  padding: 0 var(--space-4) var(--space-4) var(--space-4);
+  border-top: 1px solid var(--gray-200);
+  margin-top: 0;
+}
+
+/* Collapsible Variants */
+.collapsible--quiz-section {
+  border-left: 4px solid var(--primary-500);
+}
+
+.collapsible--quiz-section .collapsible-trigger {
+  background: linear-gradient(90deg, var(--primary-50), transparent);
+}
+
+.collapsible--quiz-section .collapsible-title {
+  color: var(--primary-700);
+}
+
+.collapsible--subject-section {
+  border-left: 4px solid var(--success-500);
+}
+
+.collapsible--subject-section .collapsible-trigger {
+  background: linear-gradient(90deg, var(--success-50), transparent);
+}
+
+.collapsible--subject-section .collapsible-title {
+  color: var(--success-700);
+}
+
+.collapsible--wrong-answers {
+  border-left: 4px solid var(--error-500);
+}
+
+.collapsible--wrong-answers .collapsible-trigger {
+  background: linear-gradient(90deg, var(--error-50), transparent);
+}
+
+.collapsible--wrong-answers .collapsible-title {
+  color: var(--error-700);
+}
+
+.collapsible--analytics {
+  border-left: 4px solid var(--warning-500);
+}
+
+.collapsible--analytics .collapsible-trigger {
+  background: linear-gradient(90deg, var(--warning-50), transparent);
+}
+
+.collapsible--analytics .collapsible-title {
+  color: var(--warning-700);
+}
+
+/* Collapsible Group */
+.collapsible-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.collapsible-group .collapsible {
+  border-radius: 0;
+  border-bottom: none;
+}
+
+.collapsible-group .collapsible:first-child {
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.collapsible-group .collapsible:last-child {
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+/* Collapsible with Badge */
+.collapsible-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  background: var(--primary-100);
+  color: var(--primary-700);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  margin-left: var(--space-2);
+}
+
+.collapsible--subject-section .collapsible-badge {
+  background: var(--success-100);
+  color: var(--success-700);
+}
+
+.collapsible--wrong-answers .collapsible-badge {
+  background: var(--error-100);
+  color: var(--error-700);
+}
+
+.collapsible--analytics .collapsible-badge {
+  background: var(--warning-100);
+  color: var(--warning-700);
+}
+
+/* Collapsible Nested */
+.collapsible-nested {
+  margin-left: var(--space-4);
+  border-left: 2px solid var(--gray-200);
+}
+
+.collapsible-nested .collapsible {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  margin-left: var(--space-2);
+}
+
+.collapsible-nested .collapsible-trigger {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.collapsible-nested .collapsible-content-inner {
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--gray-100);
+}
+
+/* Quiz Question Collapsible */
+.quiz-question-collapsible {
+  background: var(--bg-secondary);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-3);
+}
+
+.quiz-question-header {
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.quiz-question-header:hover {
+  background: var(--gray-50);
+}
+
+.quiz-question-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--primary-100);
+  color: var(--primary-700);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  flex-shrink: 0;
+}
+
+.quiz-question-content {
+  flex: 1;
+}
+
+.quiz-question-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+  line-height: var(--leading-tight);
+}
+
+.quiz-question-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.quiz-question-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.quiz-question-status-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.quiz-question-status--correct {
+  color: var(--success-600);
+}
+
+.quiz-question-status--incorrect {
+  color: var(--error-600);
+}
+
+.quiz-question-status--unanswered {
+  color: var(--warning-600);
+}
+
+.quiz-question-expand {
+  width: 24px;
+  height: 24px;
+  color: var(--text-secondary);
+  transition: transform 0.3s ease;
+}
+
+.quiz-question-collapsible.expanded .quiz-question-expand {
+  transform: rotate(180deg);
+}
+
+.quiz-question-body {
+  padding: 0 var(--space-4) var(--space-4) var(--space-4);
+  border-top: 1px solid var(--gray-200);
+}
+
+.quiz-question-text {
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-4);
+}
+
+.quiz-question-answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.quiz-answer-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  font-size: var(--text-sm);
+}
+
+.quiz-answer-option.selected {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+}
+
+.quiz-answer-option.correct {
+  background: var(--success-50);
+  border-color: var(--success-300);
+}
+
+.quiz-answer-option.incorrect {
+  background: var(--error-50);
+  border-color: var(--error-300);
+}
+
+.quiz-answer-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: var(--gray-200);
+  color: var(--gray-600);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  flex-shrink: 0;
+}
+
+.quiz-answer-option.selected .quiz-answer-letter {
+  background: var(--primary-500);
+  color: white;
+}
+
+.quiz-answer-option.correct .quiz-answer-letter {
+  background: var(--success-500);
+  color: white;
+}
+
+.quiz-answer-option.incorrect .quiz-answer-letter {
+  background: var(--error-500);
+  color: white;
+}
+
+/* Study Material Collapsible */
+.study-material-collapsible {
+  background: var(--bg-secondary);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-3);
+}
+
+.study-material-header {
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.study-material-header:hover {
+  background: var(--gray-50);
+}
+
+.study-material-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--success-100);
+  color: var(--success-600);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.study-material-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.study-material-description {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.study-material-body {
+  padding: 0 var(--space-4) var(--space-4) var(--space-4);
+  border-top: 1px solid var(--gray-200);
+}
+
+.study-material-content {
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  line-height: var(--leading-relaxed);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .aml-quiz-collapsible-components {
+    width: 100%;
+    max-width: 375px;
+    height: auto;
+  }
+
+  .collapsible-trigger {
+    padding: var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  .collapsible-content-inner {
+    padding: var(--space-3);
+  }
+
+  .quiz-question-header {
+    padding: var(--space-3);
+  }
+
+  .quiz-question-number {
+    width: 28px;
+    height: 28px;
+    font-size: var(--text-xs);
+  }
+
+  .quiz-question-title {
+    font-size: var(--text-sm);
+  }
+
+  .quiz-question-body {
+    padding: var(--space-3);
+  }
+
+  .study-material-header {
+    padding: var(--space-3);
+  }
+
+  .study-material-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .study-material-title {
+    font-size: var(--text-base);
+  }
+}
+
+/* Collapsible Animations */
+.collapsible-content {
+  animation: collapsible-slide-up 0.3s ease-out;
+}
+
+.collapsible--open .collapsible-content {
+  animation: collapsible-slide-down 0.3s ease-out;
+}
+
+@keyframes collapsible-slide-down {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 1000px;
+    opacity: 1;
+  }
+}
+
+@keyframes collapsible-slide-up {
+  from {
+    max-height: 1000px;
+    opacity: 1;
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+  }
+}

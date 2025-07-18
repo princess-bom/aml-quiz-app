@@ -31,7 +31,8 @@ Rails.application.routes.draw do
   resources :quiz_results, only: [:show]
 
   # Wrong answers routes
-  resources :wrong_answers do
+  get "wrong_answers" => "wrong_answers#index", as: :wrong_answers
+  resources :wrong_answers, except: [:index] do
     member do
       patch :toggle_bookmark
       patch :update_note
@@ -48,6 +49,12 @@ Rails.application.routes.draw do
   # Learning analytics routes
   get "analytics" => "analytics#index", as: :analytics
   get "analytics/subjects/:subject" => "analytics#subject", as: :subject_analytics
+
+  # Dashboard route (alias for root)
+  get "dashboard" => "home#index", as: :dashboard
+  
+  # Additional route aliases for navigation
+  get "start_new_quiz" => "quiz_selection#index", as: :new_quiz_start
 
   # Root route
   root "home#index"

@@ -1,0 +1,615 @@
+<% content_for :page_title, "오답노트" %>
+
+<!-- Header Section -->
+<div class="dashboard-header text-center">
+  <h1 class="dashboard-title">📝 오답노트</h1>
+  <p class="dashboard-subtitle">틀린 문제들을 복습하여<br>실력을 향상시켜보세요</p>
+</div>
+
+<!-- Summary Stats -->
+<div class="dashboard-stats">
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-header">
+      <span class="dashboard-stat-title">총 오답</span>
+      <span class="dashboard-stat-icon">❌</span>
+    </div>
+    <div class="dashboard-stat-value"><%= @wrong_answers_stats[:total_count] || 15 %>개</div>
+    <div class="dashboard-stat-change dashboard-stat-change--neutral">
+      <span>최근 추가 3개</span>
+    </div>
+  </div>
+  
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-header">
+      <span class="dashboard-stat-title">복습완료</span>
+      <span class="dashboard-stat-icon">✅</span>
+    </div>
+    <div class="dashboard-stat-value"><%= @wrong_answers_stats[:reviewed_count] || 8 %>개</div>
+    <div class="dashboard-stat-change dashboard-stat-change--positive">
+      <span>53% 완료</span>
+    </div>
+  </div>
+  
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-header">
+      <span class="dashboard-stat-title">평균점수</span>
+      <span class="dashboard-stat-icon">📊</span>
+    </div>
+    <div class="dashboard-stat-value"><%= @wrong_answers_stats[:avg_retry_score] || 72 %>점</div>
+    <div class="dashboard-stat-change dashboard-stat-change--positive">
+      <span>↗️ +8점 향상</span>
+    </div>
+  </div>
+</div>
+
+<!-- Filter and Search -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">🔍 필터 및 검색</h3>
+  </div>
+  <div class="card-content">
+    <div class="form-group">
+      <div class="search-form">
+        <input type="text" class="search-form-input" placeholder="문제 내용 검색..." id="wrong-answer-search">
+        <button class="search-form-button" type="button">
+          <span class="search-form-icon">🔍</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="button-group button-group--quiz-filters" style="margin-top: var(--space-4);">
+      <button class="button button--outline button--sm filter-btn active" data-filter="all">전체</button>
+      <button class="button button--outline button--sm filter-btn" data-filter="subject-1">자금세탁방지법</button>
+      <button class="button button--outline button--sm filter-btn" data-filter="subject-2">고객확인제도</button>
+      <button class="button button--outline button--sm filter-btn" data-filter="subject-3">의심거래신고</button>
+    </div>
+    
+    <div class="button-group" style="margin-top: var(--space-3);">
+      <button class="button button--outline button--sm filter-btn" data-filter="not-reviewed">미복습</button>
+      <button class="button button--outline button--sm filter-btn" data-filter="reviewed">복습완료</button>
+      <button class="button button--outline button--sm filter-btn" data-filter="bookmarked">북마크</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="button-group" style="margin-bottom: var(--space-6);">
+  <%= link_to new_wrong_answer_quiz_path, class: "button button--primary" do %>
+    🎯 오답 퀴즈 시작
+  <% end %>
+  
+  <button class="button button--outline" onclick="reviewAllWrongAnswers()">
+    📚 전체 복습
+  </button>
+</div>
+
+<!-- Wrong Answers List -->
+<div class="wrong-answers-list">
+  
+  <!-- Wrong Answer Item 1 -->
+  <div class="wrong-answer-item" data-subject="subject-1" data-status="not-reviewed">
+    <div class="wrong-answer-header">
+      <div class="wrong-answer-subject">
+        <span class="subject-badge subject-badge--subject-1">자금세탁방지법</span>
+        <span class="wrong-answer-date">2일 전</span>
+      </div>
+      <div class="wrong-answer-actions">
+        <button class="wrong-answer-action wrong-answer-bookmark active" onclick="toggleBookmark(this)">
+          <span>🔖</span>
+        </button>
+        <span class="wrong-answer-status wrong-answer-status--not-reviewed">미복습</span>
+      </div>
+    </div>
+    
+    <div class="wrong-answer-content">
+      <div class="wrong-answer-question">
+        <h4 class="wrong-answer-question-title">Q. 자금세탁방지법상 고객확인 의무를 이행해야 하는 거래 기준 금액은?</h4>
+      </div>
+      
+      <div class="wrong-answer-details">
+        <div class="dashboard-stats" style="margin: var(--space-3) 0;">
+          <div class="dashboard-stat-card dashboard-stat-card--compact">
+            <div class="dashboard-stat-title">정답</div>
+            <div class="dashboard-stat-value" style="color: var(--success-600); font-size: var(--text-sm);">C. 1000만원 이상</div>
+          </div>
+          <div class="dashboard-stat-card dashboard-stat-card--compact">
+            <div class="dashboard-stat-title">내 답안</div>
+            <div class="dashboard-stat-value" style="color: var(--error-600); font-size: var(--text-sm);">B. 500만원 이상</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="collapsible">
+        <div class="collapsible-trigger">
+          <span class="collapsible-title">💡 해설 보기</span>
+          <span class="collapsible-icon">▼</span>
+        </div>
+        <div class="collapsible-content">
+          <div class="collapsible-content-inner">
+            <p class="quiz-explanation">
+              자금세탁방지법 제4조에 따라 1000만원 이상의 거래 시 고객확인의무가 발생합니다. 이는 금융기관의 핵심 의무사항 중 하나입니다.
+            </p>
+            <div style="margin-top: var(--space-3);">
+              <h5 class="card-title">📚 관련 법조문</h5>
+              <ul style="margin: var(--space-2) 0; padding-left: var(--space-4);">
+                <li>• 자금세탁방지법 제4조</li>
+                <li>• 시행령 제7조</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="button-group button-group--horizontal" style="margin-top: var(--space-4);">
+        <%= link_to retry_wrong_answer_path(1), class: "button button--retry-quiz button--sm" do %>
+          다시풀기
+        <% end %>
+        <button class="button button--outline button--sm" onclick="markAsReviewed(this)">
+          복습완료
+        </button>
+        <button class="button button--outline button--sm" onclick="addNote(this)">
+          📝 메모
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wrong Answer Item 2 -->
+  <div class="wrong-answer-item" data-subject="subject-2" data-status="reviewed">
+    <div class="wrong-answer-header">
+      <div class="wrong-answer-subject">
+        <span class="subject-badge subject-badge--subject-2">고객확인제도</span>
+        <span class="wrong-answer-date">1주 전</span>
+      </div>
+      <div class="wrong-answer-actions">
+        <button class="wrong-answer-action wrong-answer-bookmark" onclick="toggleBookmark(this)">
+          <span>🔖</span>
+        </button>
+        <span class="wrong-answer-status wrong-answer-status--reviewed">복습완료 ✓</span>
+      </div>
+    </div>
+    
+    <div class="wrong-answer-content">
+      <div class="wrong-answer-question">
+        <h4 class="wrong-answer-question-title">Q. 고객확인제도에서 요구되는 신분확인 방법으로 올바른 것은?</h4>
+      </div>
+      
+      <div class="wrong-answer-details">
+        <div class="dashboard-stats" style="margin: var(--space-3) 0;">
+          <div class="dashboard-stat-card dashboard-stat-card--compact">
+            <div class="dashboard-stat-title">정답</div>
+            <div class="dashboard-stat-value" style="color: var(--success-600); font-size: var(--text-sm);">A. 신분증 확인</div>
+          </div>
+          <div class="dashboard-stat-card dashboard-stat-card--compact">
+            <div class="dashboard-stat-title">내 답안</div>
+            <div class="dashboard-stat-value" style="color: var(--error-600); font-size: var(--text-sm);">D. 계좌번호만 확인</div>
+          </div>
+        </div>
+        
+        <div class="wrong-answer-retry-score">
+          <span class="badge badge--success">재시도: 95점</span>
+        </div>
+      </div>
+      
+      <div class="button-group button-group--horizontal" style="margin-top: var(--space-4);">
+        <%= link_to retry_wrong_answer_path(2), class: "button button--outline button--sm" do %>
+          다시풀기
+        <% end %>
+        <button class="button button--outline button--sm" onclick="removeFromReviewed(this)">
+          복습취소
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wrong Answer Item 3 -->
+  <div class="wrong-answer-item" data-subject="subject-3" data-status="not-reviewed" data-bookmarked="true">
+    <div class="wrong-answer-header">
+      <div class="wrong-answer-subject">
+        <span class="subject-badge subject-badge--subject-3">의심거래신고</span>
+        <span class="wrong-answer-date">3일 전</span>
+      </div>
+      <div class="wrong-answer-actions">
+        <button class="wrong-answer-action wrong-answer-bookmark active" onclick="toggleBookmark(this)">
+          <span>📑</span>
+        </button>
+        <span class="wrong-answer-status wrong-answer-status--not-reviewed">미복습</span>
+      </div>
+    </div>
+    
+    <div class="wrong-answer-content">
+      <div class="wrong-answer-question">
+        <h4 class="wrong-answer-question-title">Q. 의심거래 신고 대상에 해당하지 않는 것은?</h4>
+      </div>
+      
+      <div class="wrong-answer-details">
+        <div class="dashboard-stats" style="margin: var(--space-3) 0;">
+          <div class="dashboard-stat-card dashboard-stat-card--compact">
+            <div class="dashboard-stat-title">정답</div>
+            <div class="dashboard-stat-value" style="color: var(--success-600); font-size: var(--text-sm);">B. 정상적인 급여이체</div>
+          </div>
+          <div class="dashboard-stat-card dashboard-stat-card--compact">
+            <div class="dashboard-stat-title">내 답안</div>
+            <div class="dashboard-stat-value" style="color: var(--error-600); font-size: var(--text-sm);">A. 현금 대량거래</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="button-group button-group--horizontal" style="margin-top: var(--space-4);">
+        <%= link_to retry_wrong_answer_path(3), class: "button button--retry-quiz button--sm" do %>
+          다시풀기
+        <% end %>
+        <button class="button button--outline button--sm" onclick="markAsReviewed(this)">
+          복습완료
+        </button>
+        <button class="button button--outline button--sm" onclick="addNote(this)">
+          📝 메모
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Load More Button -->
+<div class="text-center" style="margin-top: var(--space-6);">
+  <button class="button button--outline" onclick="loadMoreWrongAnswers()">
+    더 많은 오답 보기 (12개 더)
+  </button>
+</div>
+
+<!-- Empty State (hidden by default) -->
+<div class="empty-state" id="empty-wrong-answers" style="display: none;">
+  <div class="empty-state-icon">🎉</div>
+  <h3 class="empty-state-title">오답이 없습니다!</h3>
+  <p class="empty-state-description">
+    모든 문제를 정답으로 맞췄거나<br>
+    아직 퀴즈를 시작하지 않았습니다.
+  </p>
+  <%= link_to quiz_selection_path, class: "button button--primary button--lg" do %>
+    퀴즈 시작하기
+  <% end %>
+</div>
+
+<style>
+.wrong-answer-item {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+  padding: var(--space-4);
+  transition: all 0.2s ease;
+}
+
+.wrong-answer-item:hover {
+  border-color: var(--gray-300);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wrong-answer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-3);
+}
+
+.wrong-answer-subject {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.wrong-answer-date {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.wrong-answer-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.wrong-answer-action {
+  background: none;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wrong-answer-action:hover {
+  border-color: var(--primary-400);
+}
+
+.wrong-answer-action.active {
+  background: var(--primary-50);
+  border-color: var(--primary-400);
+}
+
+.wrong-answer-bookmark span {
+  font-size: var(--text-sm);
+}
+
+.wrong-answer-status {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-medium);
+}
+
+.wrong-answer-status--not-reviewed {
+  background: var(--error-50);
+  color: var(--error-700);
+}
+
+.wrong-answer-status--reviewed {
+  background: var(--success-50);
+  color: var(--success-700);
+}
+
+.wrong-answer-question-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+.wrong-answer-details {
+  margin: var(--space-3) 0;
+}
+
+.wrong-answer-retry-score {
+  margin-top: var(--space-2);
+}
+
+.dashboard-stat-card--compact {
+  padding: var(--space-2);
+}
+
+.dashboard-stat-card--compact .dashboard-stat-title {
+  font-size: var(--text-xs);
+  margin-bottom: var(--space-1);
+}
+
+.dashboard-stat-card--compact .dashboard-stat-value {
+  font-size: var(--text-sm);
+}
+
+.subject-badge {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-medium);
+}
+
+.subject-badge--subject-1 {
+  background: var(--subject-1-50);
+  color: var(--subject-1-700);
+}
+
+.subject-badge--subject-2 {
+  background: var(--subject-2-50);
+  color: var(--subject-2-700);
+}
+
+.subject-badge--subject-3 {
+  background: var(--subject-3-50);
+  color: var(--subject-3-700);
+}
+
+.button-group--quiz-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filter-btn.active {
+  background: var(--primary-500);
+  color: white;
+  border-color: var(--primary-500);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--text-secondary);
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: var(--space-4);
+}
+
+.empty-state-title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+}
+
+.empty-state-description {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-6);
+}
+
+@media (max-width: 768px) {
+  .wrong-answer-header {
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+  
+  .wrong-answer-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+  
+  .button-group--quiz-filters {
+    justify-content: center;
+  }
+}
+</style>
+
+<script>
+// Filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const wrongAnswerItems = document.querySelectorAll('.wrong-answer-item');
+  const searchInput = document.getElementById('wrong-answer-search');
+  
+  // Filter by buttons
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Remove active class from all buttons
+      filterBtns.forEach(b => b.classList.remove('active'));
+      // Add active class to clicked button
+      this.classList.add('active');
+      
+      const filter = this.dataset.filter;
+      filterWrongAnswers(filter);
+    });
+  });
+  
+  // Search functionality
+  searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    filterBySearch(searchTerm);
+  });
+  
+  function filterWrongAnswers(filter) {
+    wrongAnswerItems.forEach(item => {
+      let show = false;
+      
+      if (filter === 'all') {
+        show = true;
+      } else if (filter.startsWith('subject-')) {
+        show = item.dataset.subject === filter;
+      } else if (filter === 'not-reviewed') {
+        show = item.dataset.status === 'not-reviewed';
+      } else if (filter === 'reviewed') {
+        show = item.dataset.status === 'reviewed';
+      } else if (filter === 'bookmarked') {
+        show = item.dataset.bookmarked === 'true';
+      }
+      
+      item.style.display = show ? 'block' : 'none';
+    });
+    
+    checkEmptyState();
+  }
+  
+  function filterBySearch(searchTerm) {
+    wrongAnswerItems.forEach(item => {
+      const questionText = item.querySelector('.wrong-answer-question-title').textContent.toLowerCase();
+      const show = questionText.includes(searchTerm);
+      item.style.display = show ? 'block' : 'none';
+    });
+    
+    checkEmptyState();
+  }
+  
+  function checkEmptyState() {
+    const visibleItems = Array.from(wrongAnswerItems).filter(item => item.style.display !== 'none');
+    const emptyState = document.getElementById('empty-wrong-answers');
+    const wrongAnswersList = document.querySelector('.wrong-answers-list');
+    
+    if (visibleItems.length === 0) {
+      wrongAnswersList.style.display = 'none';
+      emptyState.style.display = 'block';
+    } else {
+      wrongAnswersList.style.display = 'block';
+      emptyState.style.display = 'none';
+    }
+  }
+});
+
+function toggleBookmark(button) {
+  const item = button.closest('.wrong-answer-item');
+  const icon = button.querySelector('span');
+  const isBookmarked = button.classList.contains('active');
+  
+  if (isBookmarked) {
+    button.classList.remove('active');
+    icon.textContent = '🔖';
+    item.dataset.bookmarked = 'false';
+  } else {
+    button.classList.add('active');
+    icon.textContent = '📑';
+    item.dataset.bookmarked = 'true';
+  }
+}
+
+function markAsReviewed(button) {
+  const item = button.closest('.wrong-answer-item');
+  const statusSpan = item.querySelector('.wrong-answer-status');
+  
+  item.dataset.status = 'reviewed';
+  statusSpan.className = 'wrong-answer-status wrong-answer-status--reviewed';
+  statusSpan.textContent = '복습완료 ✓';
+  
+  // Update button
+  button.textContent = '복습취소';
+  button.onclick = () => removeFromReviewed(button);
+  
+  // Add retry score badge if not exists
+  const details = item.querySelector('.wrong-answer-details');
+  if (!details.querySelector('.wrong-answer-retry-score')) {
+    const retryScore = document.createElement('div');
+    retryScore.className = 'wrong-answer-retry-score';
+    retryScore.innerHTML = '<span class="badge badge--success">재시도: 85점</span>';
+    details.appendChild(retryScore);
+  }
+}
+
+function removeFromReviewed(button) {
+  const item = button.closest('.wrong-answer-item');
+  const statusSpan = item.querySelector('.wrong-answer-status');
+  
+  item.dataset.status = 'not-reviewed';
+  statusSpan.className = 'wrong-answer-status wrong-answer-status--not-reviewed';
+  statusSpan.textContent = '미복습';
+  
+  // Update button
+  button.textContent = '복습완료';
+  button.onclick = () => markAsReviewed(button);
+  
+  // Remove retry score badge
+  const retryScore = item.querySelector('.wrong-answer-retry-score');
+  if (retryScore) {
+    retryScore.remove();
+  }
+}
+
+function addNote(button) {
+  const note = prompt('이 문제에 대한 메모를 추가하세요:');
+  if (note) {
+    alert('메모가 저장되었습니다: ' + note);
+  }
+}
+
+function reviewAllWrongAnswers() {
+  if (confirm('모든 미복습 오답을 복습 완료로 표시하시겠습니까?')) {
+    const notReviewedItems = document.querySelectorAll('.wrong-answer-item[data-status="not-reviewed"]');
+    notReviewedItems.forEach(item => {
+      const button = item.querySelector('.button[onclick*="markAsReviewed"]');
+      if (button) {
+        markAsReviewed(button);
+      }
+    });
+  }
+}
+
+function loadMoreWrongAnswers() {
+  // In a real app, this would load more items via AJAX
+  alert('더 많은 오답을 불러오는 기능은 구현 예정입니다.');
+}
+</script>

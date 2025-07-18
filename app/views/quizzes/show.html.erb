@@ -1,34 +1,160 @@
-<div class="min-h-screen bg-gray-50">
-  <!-- Header -->
-  <header class="bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center py-4">
-        <div class="flex items-center space-x-3">
-          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-          </svg>
-          <h1 class="text-lg font-semibold text-gray-900">AML Quiz</h1>
-        </div>
-        <div class="flex items-center space-x-4">
-          <div class="text-sm text-gray-600">
-            <span class="font-medium"><%= @quiz_session.score %>점</span>
-            <span class="mx-1">|</span>
-            <span><%= @quiz_session.correct_answers %>/<%= @quiz_session.current_quiz_index %> 정답</span>
-          </div>
-          <%= link_to root_path, class: "text-gray-500 hover:text-gray-700" do %>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  </header>
+<% content_for :page_title, "퀴즈" %>
+<% content_for :back_button do %>
+  <%= link_to quiz_selection_path, class: "mobile-header-back" do %>
+    <span class="mobile-header-back-icon">←</span>
+  <% end %>
+<% end %>
 
-  <!-- Main Content -->
-  <main class="py-6">
-    <%= render QuizQuestionComponent.new(quiz: @current_quiz, session: @quiz_session) %>
-  </main>
+<!-- Quiz Navigation Header -->
+<div class="quiz-nav">
+  <div class="quiz-nav-header">
+    <h2 class="quiz-nav-title">
+      <%= @current_quiz&.subject || "자금세탁방지법" %> • 
+      <%= @current_quiz&.quiz_type || "기초" %> • 
+      <%= @current_quiz&.difficulty || "중급" %>
+    </h2>
+    <div class="quiz-nav-progress">
+      문제 <%= @quiz_session&.current_quiz_index || 3 %>/20 • 
+      <%= (@quiz_session&.current_quiz_index || 3) * 5 %>% 완료
+    </div>
+  </div>
+  
+  <div class="quiz-nav-progress-bar">
+    <div class="quiz-nav-progress-fill" style="width: <%= (@quiz_session&.current_quiz_index || 3) * 5 %>%"></div>
+  </div>
+  
+  <div class="quiz-nav-actions">
+    <button class="quiz-nav-action active">
+      <span>🔖</span>
+      <span>북마크</span>
+    </button>
+    <button class="quiz-nav-action">
+      <span>⏱️</span>
+      <span>타이머</span>
+    </button>
+  </div>
 </div>
+
+<!-- Question Content -->
+<div class="card card--quiz">
+  <div class="card-header">
+    <h3 class="card-title">❓ 문제 <%= @quiz_session&.current_quiz_index || 3 %></h3>
+  </div>
+  
+  <div class="card-content">
+    <div class="quiz-question-text">
+      <%= @current_quiz&.question || "자금세탁방지법상 고객확인 의무를 이행해야 하는 거래 기준 금액은?" %>
+    </div>
+    
+    <!-- Answer Options -->
+    <%= form_with url: answer_quiz_path(@quiz_session || 1), local: true, method: :post, class: "quiz-answer-options" do |form| %>
+      
+      <div class="quiz-answer-option" data-answer="A">
+        <div class="quiz-answer-letter">A</div>
+        <div class="quiz-answer-text">300만원 이상</div>
+        <%= form.radio_button :selected_answer, "A", class: "sr-only" %>
+      </div>
+      
+      <div class="quiz-answer-option" data-answer="B">
+        <div class="quiz-answer-letter">B</div>
+        <div class="quiz-answer-text">500만원 이상</div>
+        <%= form.radio_button :selected_answer, "B", class: "sr-only" %>
+      </div>
+      
+      <div class="quiz-answer-option selected" data-answer="C">
+        <div class="quiz-answer-letter">C</div>
+        <div class="quiz-answer-text">1000만원 이상</div>
+        <%= form.radio_button :selected_answer, "C", class: "sr-only", checked: true %>
+      </div>
+      
+      <div class="quiz-answer-option" data-answer="D">
+        <div class="quiz-answer-letter">D</div>
+        <div class="quiz-answer-text">3000만원 이상</div>
+        <%= form.radio_button :selected_answer, "D", class: "sr-only" %>
+      </div>
+      
+      <div class="quiz-answer-option" data-answer="E">
+        <div class="quiz-answer-letter">E</div>
+        <div class="quiz-answer-text">5000만원 이상</div>
+        <%= form.radio_button :selected_answer, "E", class: "sr-only" %>
+      </div>
+      
+      <!-- Submit Button -->
+      <%= form.submit "답안 제출", class: "button button--submit-answer button--lg w-full", style: "margin-top: var(--space-6);" %>
+      
+    <% end %>
+    
+    <!-- Previous Question Button -->
+    <% if (@quiz_session&.current_quiz_index || 3) > 1 %>
+      <%= link_to previous_question_path(@quiz_session), class: "button button--outline w-full", style: "margin-top: var(--space-3);" do %>
+        이전 문제
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<!-- Quiz Info -->
+<div class="alert alert--info">
+  <div class="alert-content">
+    <h4 class="alert-title">퀴즈 안내</h4>
+    <ul class="alert-list" style="margin: 0; padding-left: var(--space-4);">
+      <li>🔔 제한시간 없음</li>
+      <li>📚 북마크 가능</li>
+      <li>🔍 해설 제공</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.quiz-answer-option {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quiz-answer-option:hover {
+  border-color: var(--primary-300);
+  background: var(--primary-50);
+}
+
+.quiz-answer-option.selected {
+  border-color: var(--primary-500);
+  background: var(--primary-50);
+}
+
+.quiz-answer-option.selected .quiz-answer-letter {
+  background: var(--primary-500);
+  color: white;
+}
+
+.alert-list {
+  list-style: none;
+}
+
+.alert-list li {
+  margin-bottom: var(--space-1);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const answerOptions = document.querySelectorAll('.quiz-answer-option');
+  const radioButtons = document.querySelectorAll('input[name="selected_answer"]');
+  
+  answerOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      // Remove selected class from all options
+      answerOptions.forEach(opt => opt.classList.remove('selected'));
+      
+      // Add selected class to clicked option
+      this.classList.add('selected');
+      
+      // Update radio button
+      const answer = this.dataset.answer;
+      const radio = document.querySelector(`input[value="${answer}"]`);
+      if (radio) {
+        radio.checked = true;
+      }
+    });
+  });
+});
+</script>

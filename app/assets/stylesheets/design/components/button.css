@@ -1,0 +1,714 @@
+/* Button Component Styles */
+
+/* Base Button Component */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Button Variants */
+.button-variants {
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 16px;
+
+  position: relative;
+  width: 375px;
+  height: 301px;
+
+  background: #FFFFFF;
+  border-radius: 0px;
+}
+
+.button-variants-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.button--primary {
+  background: var(--primary-500);
+  color: white;
+}
+
+.button--primary:hover {
+  background: var(--primary-600);
+}
+
+.button--secondary {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border-color: var(--gray-300);
+}
+
+.button--secondary:hover {
+  background: var(--gray-200);
+}
+
+.button--outline {
+  background: transparent;
+  color: var(--primary-500);
+  border-color: var(--primary-500);
+}
+
+.button--outline:hover {
+  background: var(--primary-50);
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--gray-600);
+}
+
+.button--ghost:hover {
+  background: var(--gray-100);
+}
+
+.button--destructive {
+  background: var(--error-500);
+  color: white;
+}
+
+.button--destructive:hover {
+  background: var(--error-600);
+}
+
+.button--success {
+  background: var(--success-500);
+  color: white;
+}
+
+.button--success:hover {
+  background: var(--success-600);
+}
+
+/* Button Sizes */
+.button-sizes {
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 16px;
+
+  position: relative;
+  width: 375px;
+  height: 232px;
+
+  background: #FFFFFF;
+  border-radius: 0px;
+}
+
+.button--xs {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-sm);
+}
+
+.button--sm {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+}
+
+.button--md {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+}
+
+.button--lg {
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-base);
+  border-radius: var(--radius-lg);
+}
+
+.button--xl {
+  padding: var(--space-5) var(--space-8);
+  font-size: var(--text-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* Button Quiz Actions */
+.button-quiz-actions {
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 16px;
+
+  position: relative;
+  width: 375px;
+  height: 248px;
+
+  background: #FFFFFF;
+  border-radius: 0px;
+}
+
+.button--start-quiz {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  font-weight: var(--font-semibold);
+}
+
+.button--start-quiz:hover {
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.button--submit-answer {
+  background: var(--success-500);
+  color: white;
+}
+
+.button--submit-answer:hover {
+  background: var(--success-600);
+}
+
+.button--next-question {
+  background: var(--primary-500);
+  color: white;
+}
+
+.button--next-question:hover {
+  background: var(--primary-600);
+}
+
+.button--view-results {
+  background: var(--warning-500);
+  color: white;
+}
+
+.button--view-results:hover {
+  background: var(--warning-600);
+}
+
+.button--retry-quiz {
+  background: transparent;
+  color: var(--primary-500);
+  border-color: var(--primary-500);
+}
+
+.button--retry-quiz:hover {
+  background: var(--primary-50);
+}
+
+.button--save-note {
+  background: var(--error-500);
+  color: white;
+}
+
+.button--save-note:hover {
+  background: var(--error-600);
+}
+
+/* Button Navigation */
+.button-navigation {
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 16px;
+
+  position: relative;
+  width: 375px;
+  height: 232px;
+
+  background: #FFFFFF;
+  border-radius: 0px;
+}
+
+.button--back {
+  background: transparent;
+  color: var(--gray-600);
+  border-color: var(--gray-300);
+}
+
+.button--back:hover {
+  background: var(--gray-50);
+}
+
+.button--forward {
+  background: var(--primary-500);
+  color: white;
+}
+
+.button--forward:hover {
+  background: var(--primary-600);
+}
+
+.button--home {
+  background: var(--success-500);
+  color: white;
+}
+
+.button--home:hover {
+  background: var(--success-600);
+}
+
+.button--menu {
+  background: transparent;
+  color: var(--gray-600);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+}
+
+.button--menu:hover {
+  background: var(--gray-100);
+}
+
+/* Button States */
+.button-states {
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 16px;
+
+  position: relative;
+  width: 375px;
+  height: 232px;
+
+  background: #FFFFFF;
+  border-radius: 0px;
+}
+
+.button--loading {
+  position: relative;
+  color: transparent;
+}
+
+.button--loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.button--active {
+  background: var(--primary-600);
+  color: white;
+}
+
+.button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button--focused {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+/* Button Social */
+.button-social {
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 16px;
+
+  position: relative;
+  width: 375px;
+  height: 232px;
+
+  background: #FFFFFF;
+  border-radius: 0px;
+}
+
+.button--google {
+  background: #4285f4;
+  color: white;
+}
+
+.button--google:hover {
+  background: #3367d6;
+}
+
+.button--kakao {
+  background: #FEE500;
+  color: #000000;
+}
+
+.button--kakao:hover {
+  background: #F9D71C;
+}
+
+.button--naver {
+  background: #03C75A;
+  color: white;
+}
+
+.button--naver:hover {
+  background: #02B652;
+}
+
+.button--share {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border-color: var(--gray-300);
+}
+
+.button--share:hover {
+  background: var(--gray-200);
+}
+
+.button--like {
+  background: transparent;
+  color: var(--error-500);
+  border-color: var(--error-500);
+}
+
+.button--like:hover {
+  background: var(--error-50);
+}
+
+.button--like.liked {
+  background: var(--error-500);
+  color: white;
+}
+
+/* Button Icon */
+.button-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.button--icon-only {
+  padding: var(--space-2);
+  width: auto;
+  height: auto;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .button-variants,
+  .button-sizes,
+  .button-quiz-actions,
+  .button-navigation,
+  .button-states,
+  .button-social {
+    width: 100%;
+    max-width: 375px;
+    height: auto;
+  }
+  
+  .button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .button--icon-only {
+    width: auto;
+  }
+  
+  .floating-buttons,
+  .button-groups {
+    width: 100%;
+    max-width: 343px;
+    height: auto;
+  }
+}
+
+/* Floating Buttons */
+.floating-buttons {
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 12px;
+
+  width: 343px;
+  height: 232px;
+
+  border-radius: 0px;
+
+  /* 내부 오토레이아웃 */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.floating-button {
+  position: fixed;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-lg);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: var(--z-fixed);
+}
+
+.floating-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.floating-button--fab {
+  width: 56px;
+  height: 56px;
+  background: var(--primary-500);
+  color: white;
+  bottom: 24px;
+  right: 24px;
+}
+
+.floating-button--fab:hover {
+  background: var(--primary-600);
+}
+
+.floating-button--small {
+  width: 40px;
+  height: 40px;
+  background: var(--success-500);
+  color: white;
+  bottom: 96px;
+  right: 24px;
+}
+
+.floating-button--small:hover {
+  background: var(--success-600);
+}
+
+.floating-button--quick-quiz {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+  color: white;
+  bottom: 24px;
+  left: 24px;
+}
+
+.floating-button--quick-quiz:hover {
+  background: linear-gradient(135deg, var(--warning-600), var(--warning-700));
+}
+
+.floating-button--help {
+  width: 44px;
+  height: 44px;
+  background: var(--gray-600);
+  color: white;
+  bottom: 144px;
+  right: 24px;
+}
+
+.floating-button--help:hover {
+  background: var(--gray-700);
+}
+
+.floating-button--scroll-top {
+  width: 40px;
+  height: 40px;
+  background: var(--gray-500);
+  color: white;
+  bottom: 24px;
+  right: 80px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.floating-button--scroll-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.floating-button--scroll-top:hover {
+  background: var(--gray-600);
+}
+
+/* Button Groups */
+.button-groups {
+  /* 오토레이아웃 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 12px;
+
+  width: 343px;
+  height: 160px;
+
+  border-radius: 0px;
+
+  /* 내부 오토레이아웃 */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.button-group {
+  display: flex;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.button-group .button {
+  border-radius: 0;
+  border-right: 1px solid var(--gray-200);
+  flex: 1;
+}
+
+.button-group .button:first-child {
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
+}
+
+.button-group .button:last-child {
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+  border-right: none;
+}
+
+.button-group .button:only-child {
+  border-radius: var(--radius-md);
+  border-right: none;
+}
+
+.button-group--vertical {
+  flex-direction: column;
+}
+
+.button-group--vertical .button {
+  border-right: none;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.button-group--vertical .button:first-child {
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+  border-bottom-left-radius: 0;
+}
+
+.button-group--vertical .button:last-child {
+  border-bottom-left-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+  border-top-right-radius: 0;
+  border-bottom: none;
+}
+
+.button-group--quiz-actions {
+  gap: 0;
+}
+
+.button-group--quiz-actions .button--primary {
+  background: var(--primary-500);
+  color: white;
+}
+
+.button-group--quiz-actions .button--secondary {
+  background: var(--gray-100);
+  color: var(--gray-700);
+}
+
+.button-group--difficulty {
+  background: var(--gray-50);
+}
+
+.button-group--difficulty .button--easy {
+  background: var(--success-100);
+  color: var(--success-700);
+}
+
+.button-group--difficulty .button--easy.active {
+  background: var(--success-500);
+  color: white;
+}
+
+.button-group--difficulty .button--medium {
+  background: var(--warning-100);
+  color: var(--warning-700);
+}
+
+.button-group--difficulty .button--medium.active {
+  background: var(--warning-500);
+  color: white;
+}
+
+.button-group--difficulty .button--hard {
+  background: var(--error-100);
+  color: var(--error-700);
+}
+
+.button-group--difficulty .button--hard.active {
+  background: var(--error-500);
+  color: white;
+}
+
+.button-group--toggle {
+  background: var(--gray-100);
+}
+
+.button-group--toggle .button {
+  background: transparent;
+  color: var(--gray-600);
+}
+
+.button-group--toggle .button.active {
+  background: var(--primary-500);
+  color: white;
+}
+
+.button-group--segmented {
+  background: var(--gray-100);
+  padding: 2px;
+}
+
+.button-group--segmented .button {
+  background: transparent;
+  border: none;
+  color: var(--gray-600);
+  margin: 0;
+}
+
+.button-group--segmented .button.active {
+  background: white;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}

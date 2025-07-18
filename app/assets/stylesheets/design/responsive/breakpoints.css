@@ -1,0 +1,316 @@
+/* 
+ * Responsive Design Breakpoints and Utilities
+ * Mobile-first approach with standardized breakpoints
+ */
+
+/* Breakpoint Variables */
+:root {
+  --breakpoint-xs: 320px;   /* Small phones */
+  --breakpoint-sm: 480px;   /* Large phones */
+  --breakpoint-md: 768px;   /* Tablets */
+  --breakpoint-lg: 1024px;  /* Small laptops */
+  --breakpoint-xl: 1280px;  /* Large laptops/desktops */
+  --breakpoint-2xl: 1536px; /* Large screens */
+}
+
+/* Container Utilities */
+.container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+@media (min-width: 480px) {
+  .container {
+    max-width: 448px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 704px;
+    padding: 0 var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+    padding: 0 var(--space-8);
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1216px;
+  }
+}
+
+/* Responsive Text Scaling */
+@media (max-width: 320px) {
+  :root {
+    --text-xs: 0.625rem;   /* 10px */
+    --text-sm: 0.75rem;    /* 12px */
+    --text-base: 0.875rem; /* 14px */
+    --text-lg: 1rem;       /* 16px */
+    --text-xl: 1.125rem;   /* 18px */
+    --text-2xl: 1.25rem;   /* 20px */
+    --text-3xl: 1.5rem;    /* 24px */
+  }
+}
+
+/* Responsive Spacing Adjustments */
+@media (max-width: 480px) {
+  :root {
+    --space-1: 0.125rem;   /* 2px */
+    --space-2: 0.25rem;    /* 4px */
+    --space-3: 0.5rem;     /* 8px */
+    --space-4: 0.75rem;    /* 12px */
+    --space-6: 1rem;       /* 16px */
+    --space-8: 1.25rem;    /* 20px */
+  }
+}
+
+/* Mobile Layout Optimizations */
+@media (max-width: 768px) {
+  /* Stack dashboard stats vertically on small screens */
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: var(--space-3);
+  }
+  
+  /* Adjust quiz answer options for mobile */
+  .quiz-answer-options {
+    gap: var(--space-2);
+  }
+  
+  .quiz-answer-option {
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  /* Mobile-optimized subject navigation */
+  .subject-nav {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-3);
+  }
+  
+  /* Compact analytics charts */
+  .analytics-weekly-chart {
+    padding: var(--space-3) 0;
+    height: 100px;
+  }
+  
+  .analytics-weekly-bar {
+    width: 16px;
+    height: 50px;
+  }
+}
+
+/* Extra small devices (< 480px) */
+@media (max-width: 479px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .button-group--horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .analytics-insights {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Compact wrong answer items */
+  .wrong-answer-item {
+    padding: var(--space-3);
+  }
+  
+  .wrong-answer-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}
+
+/* Tablet optimizations (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .subject-nav {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .analytics-insights {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Show desktop navigation instead of mobile on tablets */
+  .mobile-header,
+  .mobile-bottom-nav {
+    display: none;
+  }
+  
+  .desktop-nav {
+    display: flex;
+  }
+  
+  .main-content {
+    padding-top: 80px;
+    padding-bottom: 0;
+  }
+}
+
+/* Desktop optimizations (1024px+) */
+@media (min-width: 1024px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .subject-nav {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .analytics-insights {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Full desktop layout */
+  .mobile-header,
+  .mobile-bottom-nav {
+    display: none;
+  }
+  
+  .desktop-nav {
+    display: flex;
+  }
+  
+  .main-content {
+    padding-top: 80px;
+    padding-bottom: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Larger quiz layout for desktop */
+  .quiz-answer-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+  
+  .quiz-answer-option {
+    padding: var(--space-4) var(--space-6);
+  }
+}
+
+/* Large desktop optimizations (1280px+) */
+@media (min-width: 1280px) {
+  .main-content {
+    max-width: 1400px;
+  }
+  
+  .quiz-answer-options {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .analytics-insights {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+/* Print styles */
+@media print {
+  .mobile-header,
+  .mobile-bottom-nav,
+  .desktop-nav,
+  .button,
+  .mobile-bottom-nav-badge,
+  .mobile-bottom-nav-indicator {
+    display: none !important;
+  }
+  
+  .main-content {
+    padding: 0;
+    margin: 0;
+  }
+  
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .card {
+    border: 1px solid #000;
+    margin-bottom: 1rem;
+    break-inside: avoid;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-500: #0066cc;
+    --primary-600: #0052a3;
+    --success-500: #008000;
+    --error-500: #cc0000;
+    --warning-500: #b8860b;
+  }
+  
+  .card,
+  .mobile-bottom-nav-item,
+  .quiz-answer-option {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .mobile-bottom-nav-badge,
+  .mobile-bottom-nav-indicator {
+    animation: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --gray-100: #404040;
+    --gray-200: #525252;
+    --gray-300: #737373;
+  }
+  
+  .mobile-header,
+  .mobile-bottom-nav {
+    background: var(--bg-secondary);
+    border-color: var(--gray-300);
+  }
+  
+  .card {
+    background: var(--bg-secondary);
+    border-color: var(--gray-300);
+  }
+}
