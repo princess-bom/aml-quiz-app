@@ -1,0 +1,11 @@
+development:
+  project_id: aml-quiz-app-dev
+  database_url: https://aml-quiz-app-dev-default-rtdb.firebaseio.com/
+
+test:
+  project_id: aml-quiz-app-test
+  database_url: https://aml-quiz-app-test-default-rtdb.firebaseio.com/
+
+production:
+  project_id: aml-quiz-app
+  database_url: https://aml-quiz-app-default-rtdb.firebaseio.com/
