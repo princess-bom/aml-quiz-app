@@ -2,7 +2,7 @@
 
 <!-- Welcome Section -->
 <div class="dashboard-header">
-  <h1 class="dashboard-title">안녕하세요, <%= current_user['name'] || '김민수' %>님!</h1>
+  <h1 class="dashboard-title">안녕하세요, <%= (current_user && current_user['name']) || '김민수' %>님!</h1>
   <p class="dashboard-subtitle">TPAC 시험 합격을 위해 노력하고 있어요</p>
 </div>
 
@@ -13,10 +13,16 @@
       <span class="dashboard-stat-title">총 세션</span>
       <span class="dashboard-stat-icon">📚</span>
     </div>
-    <div class="dashboard-stat-value"><%= @user_stats[:total_sessions] || 24 %>회</div>
-    <div class="dashboard-stat-change dashboard-stat-change--positive">
-      <span>↗️ +3회 이번 주</span>
-    </div>
+    <div class="dashboard-stat-value"><%= @user_stats[:total_sessions] %>회</div>
+    <% if @user_stats[:total_sessions] > 0 %>
+      <div class="dashboard-stat-change dashboard-stat-change--positive">
+        <span>📚 학습 진행 중</span>
+      </div>
+    <% else %>
+      <div class="dashboard-stat-change">
+        <span>시작해보세요!</span>
+      </div>
+    <% end %>
   </div>
   
   <div class="dashboard-stat-card">
@@ -24,23 +30,55 @@
       <span class="dashboard-stat-title">평균점수</span>
       <span class="dashboard-stat-icon">📊</span>
     </div>
-    <div class="dashboard-stat-value"><%= @user_stats[:average_score] || 78 %>점</div>
-    <div class="dashboard-stat-change dashboard-stat-change--positive">
-      <span>↗️ +5점 상승</span>
-    </div>
+    <div class="dashboard-stat-value"><%= @user_stats[:average_score].round %>점</div>
+    <% if @user_stats[:average_score] >= 80 %>
+      <div class="dashboard-stat-change dashboard-stat-change--positive">
+        <span>🎉 우수한 성과</span>
+      </div>
+    <% elsif @user_stats[:average_score] >= 60 %>
+      <div class="dashboard-stat-change">
+        <span>👍 좋은 진전</span>
+      </div>
+    <% else %>
+      <div class="dashboard-stat-change">
+        <span>💪 화이팅!</span>
+      </div>
+    <% end %>
   </div>
 </div>
 
 <!-- Study Streak -->
-<div class="alert alert--streak-achievement">
-  <div class="alert-content">
-    <div class="alert-streak-emoji">⭐</div>
-    <div class="alert-streak-content">
-      <h3 class="alert-title">연속 학습 7일 달성!</h3>
-      <p class="alert-description">꾸준한 학습으로 실력이 향상되고 있어요 🔥</p>
+<% if @user_stats[:study_streak] > 0 %>
+  <div class="alert alert--streak-achievement">
+    <div class="alert-content">
+      <div class="alert-streak-emoji">
+        <% if @user_stats[:study_streak] >= 7 %>⭐<% elsif @user_stats[:study_streak] >= 3 %>🔥<% else %>📚<% end %>
+      </div>
+      <div class="alert-streak-content">
+        <h3 class="alert-title">연속 학습 <%= @user_stats[:study_streak] %>일 달성!</h3>
+        <p class="alert-description">
+          <% if @user_stats[:study_streak] >= 7 %>
+            꾸준한 학습으로 실력이 향상되고 있어요! 🎉
+          <% elsif @user_stats[:study_streak] >= 3 %>
+            좋은 습관을 만들어가고 있네요! 💪
+          <% else %>
+            오늘도 학습을 시작해보세요! 📖
+          <% end %>
+        </p>
+      </div>
     </div>
   </div>
-</div>
+<% else %>
+  <div class="alert alert--info">
+    <div class="alert-content">
+      <div class="alert-streak-emoji">🚀</div>
+      <div class="alert-streak-content">
+        <h3 class="alert-title">학습을 시작해보세요!</h3>
+        <p class="alert-description">꾸준한 학습으로 TPAC 시험에 합격하세요! 📚</p>
+      </div>
+    </div>
+  </div>
+<% end %>
 
 <!-- Main CTA -->
 <%= link_to quiz_selection_path, class: "button button--start-quiz button--lg w-full" do %>

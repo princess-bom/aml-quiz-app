@@ -1,0 +1,260 @@
+<% content_for :page_title, "퀴즈" %>
+<% content_for :back_button do %>
+  <%= link_to quiz_selection_path, class: "mobile-header-back", 
+      data: { confirm: "퀴즈를 종료하시겠습니까? 진행 상황이 저장되지 않습니다." } do %>
+    <span class="mobile-header-back-icon">←</span>
+  <% end %>
+<% end %>
+
+<!-- Quiz Navigation Header -->
+<div class="quiz-nav">
+  <div class="quiz-nav-header">
+    <h2 class="quiz-nav-title">
+      <%= @quiz_session['subject_name'] %> • 
+      <%= t("difficulty.#{@quiz_session['difficulty']}", default: @quiz_session['difficulty']) %>
+    </h2>
+    <div class="quiz-nav-progress">
+      문제 <%= @question_number %>/<%= @total_questions %> • 
+      <%= @progress_percentage %>% 완료
+    </div>
+  </div>
+  
+  <div class="quiz-nav-progress-bar">
+    <div class="quiz-nav-progress-fill" style="width: <%= @progress_percentage %>%"></div>
+  </div>
+  
+  <div class="quiz-nav-actions">
+    <button class="quiz-nav-action" id="bookmark-btn">
+      <span>🔖</span>
+      <span>북마크</span>
+    </button>
+    <button class="quiz-nav-action" id="timer-btn">
+      <span>⏱️</span>
+      <span id="timer-display">00:00</span>
+    </button>
+  </div>
+</div>
+
+<!-- Question Content -->
+<div class="card card--quiz">
+  <div class="card-header">
+    <h3 class="card-title">❓ 문제 <%= @question_number %></h3>
+  </div>
+  
+  <div class="card-content">
+    <div class="quiz-question-text">
+      <%= @current_question['question_text'] %>
+    </div>
+    
+    <!-- Answer Options -->
+    <% if @show_explanation %>
+      <!-- Show answered state -->
+      <div class="quiz-answer-options quiz-answered">
+        <% ["option_1", "option_2", "option_3", "option_4", "option_5"].each_with_index do |option_key, index| %>
+          <% option_text = @current_question[option_key] %>
+          <% option_letter = ('A'..'E').to_a[index] %>
+          <% is_correct = @current_question['correct_answer'] == (index + 1).to_s %>
+          <% is_selected = @user_answer && @user_answer['selected_answer'] == (index + 1).to_s %>
+          
+          <div class="quiz-answer-option <%= 'correct' if is_correct %> <%= 'wrong' if is_selected && !is_correct %> <%= 'selected' if is_selected %>" 
+               data-answer="<%= index + 1 %>">
+            <div class="quiz-answer-letter"><%= option_letter %></div>
+            <div class="quiz-answer-text"><%= option_text %></div>
+            <% if is_correct %>
+              <span class="quiz-answer-feedback">✓ 정답</span>
+            <% elsif is_selected && !is_correct %>
+              <span class="quiz-answer-feedback">✗ 오답</span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Explanation -->
+      <% if @current_explanation %>
+        <div class="quiz-explanation">
+          <h4 class="quiz-explanation-title">💡 해설</h4>
+          <div class="quiz-explanation-content">
+            <%= @current_explanation['correct_reason'] %>
+            <% if @current_explanation['key_point'] %>
+              <div class="quiz-explanation-keypoint">
+                <strong>핵심 포인트:</strong> <%= @current_explanation['key_point'] %>
+              </div>
+            <% end %>
+            <% if @current_explanation['reference'] %>
+              <div class="quiz-explanation-reference">
+                <strong>참고:</strong> <%= @current_explanation['reference'] %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Next Question Button -->
+      <% if @question_number < @total_questions %>
+        <%= link_to "다음 문제", quiz_path(@session_id), 
+            class: "button button--primary button--lg w-full", 
+            style: "margin-top: var(--space-6);" %>
+      <% else %>
+        <%= link_to "결과 보기", complete_quiz_path(@session_id), 
+            method: :post,
+            class: "button button--success button--lg w-full", 
+            style: "margin-top: var(--space-6);" %>
+      <% end %>
+      
+    <% else %>
+      <!-- Show unanswered state -->
+      <%= form_with url: answer_quiz_path(@session_id), 
+                    local: false,
+                    data: { 
+                      controller: "quiz-answer",
+                      session_id: @session_id, 
+                      question_id: @current_question['id'],
+                      quiz_answer_target: "form",
+                      action: "submit->quiz-answer#submitAnswer"
+                    } do |f| %>
+        <div class="quiz-answer-options">
+          <% ["option_1", "option_2", "option_3", "option_4", "option_5"].each_with_index do |option_key, index| %>
+            <% option_text = @current_question[option_key] %>
+            <% option_letter = ('A'..'E').to_a[index] %>
+            
+            <div class="quiz-answer-option" 
+                 data-answer="<%= index + 1 %>"
+                 data-quiz-answer-target="options"
+                 data-action="click->quiz-answer#selectAnswer">
+              <div class="quiz-answer-letter"><%= option_letter %></div>
+              <div class="quiz-answer-text"><%= option_text %></div>
+              <%= f.radio_button :selected_answer, index + 1, class: "sr-only" %>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Submit Button -->
+        <%= f.submit "답안 제출", 
+            class: "button button--submit-answer button--lg w-full", 
+            style: "margin-top: var(--space-6);",
+            disabled: true,
+            data: { quiz_answer_target: "submitButton" } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<!-- Quiz Info -->
+<div class="alert alert--info">
+  <div class="alert-content">
+    <h4 class="alert-title">퀴즈 안내</h4>
+    <ul class="alert-list" style="margin: 0; padding-left: var(--space-4);">
+      <li>🔔 제한시간 없음</li>
+      <li>📚 북마크 가능</li>
+      <li>🔍 해설 제공</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.quiz-answer-option {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.quiz-answer-option:hover:not(.quiz-answered .quiz-answer-option) {
+  border-color: var(--primary-300);
+  background: var(--primary-50);
+}
+
+.quiz-answer-option.selected:not(.quiz-answered .quiz-answer-option) {
+  border-color: var(--primary-500);
+  background: var(--primary-50);
+}
+
+.quiz-answer-option.selected .quiz-answer-letter {
+  background: var(--primary-500);
+  color: white;
+}
+
+.quiz-answer-option.correct {
+  border-color: var(--success-500);
+  background: var(--success-50);
+}
+
+.quiz-answer-option.correct .quiz-answer-letter {
+  background: var(--success-500);
+  color: white;
+}
+
+.quiz-answer-option.wrong {
+  border-color: var(--error-500);
+  background: var(--error-50);
+}
+
+.quiz-answer-option.wrong .quiz-answer-letter {
+  background: var(--error-500);
+  color: white;
+}
+
+.quiz-answer-feedback {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: var(--font-medium);
+}
+
+.quiz-explanation {
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  background: var(--blue-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--blue-200);
+}
+
+.quiz-explanation-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-medium);
+  margin-bottom: var(--space-3);
+  color: var(--blue-900);
+}
+
+.quiz-explanation-content {
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+
+.quiz-explanation-keypoint,
+.quiz-explanation-reference {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--blue-200);
+}
+
+.alert-list {
+  list-style: none;
+}
+
+.alert-list li {
+  margin-bottom: var(--space-1);
+}
+
+.quiz-answered .quiz-answer-option {
+  cursor: default;
+  pointer-events: none;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Timer functionality
+  let startTime = Date.now();
+  const timerDisplay = document.getElementById('timer-display');
+  
+  function updateTimer() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const minutes = Math.floor(elapsed / 60);
+    const seconds = elapsed % 60;
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+  
+  setInterval(updateTimer, 1000);
+});
+</script>

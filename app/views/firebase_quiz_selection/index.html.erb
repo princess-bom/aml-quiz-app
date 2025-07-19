@@ -1,0 +1,161 @@
+<% content_for :page_title, "퀴즈 선택" %>
+<% content_for :back_button do %>
+  <%= link_to dashboard_path, class: "mobile-header-back" do %>
+    <span class="mobile-header-back-icon">←</span>
+  <% end %>
+<% end %>
+
+<!-- Quiz System Header -->
+<div class="dashboard-header text-center">
+  <h1 class="dashboard-title">🎯 AML 퀴즈 시스템</h1>
+  <p class="dashboard-subtitle">6과목 • <%= @total_questions_available %>개 문제<br>20문제 객관식 형태</p>
+</div>
+
+<!-- Recommended Quizzes -->
+<% if @weak_areas.any? %>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">📋 추천 퀴즈</h3>
+  </div>
+  <div class="card-content">
+    <% @weak_areas.first(2).each do |area| %>
+      <%= link_to start_quiz_path(subject_id: area[:subject_id], difficulty: area[:difficulty]), 
+          method: :post,
+          class: "subject-nav-card subject-nav-card--subject-#{area[:subject_id]}" do %>
+        <div class="subject-nav-card-header">
+          <div class="subject-nav-card-icon">
+            <%= ["🔵", "🟣", "🟢", "🟠", "🔴", "🟦"][area[:subject_id] - 1] %>
+          </div>
+          <div class="subject-nav-card-title"><%= area[:subject_name] %></div>
+          <span class="quiz-nav-action">▶️</span>
+        </div>
+        <div class="subject-nav-card-stats">
+          <span>오답 <%= area[:wrong_count] %>개</span>
+          <span>난이도: <%= t("difficulty.#{area[:difficulty]}", default: area[:difficulty]) %></span>
+        </div>
+        <div class="badge-subjects-container" style="margin-top: var(--space-3);">
+          <span class="badge badge--error">개선필요⚠️</span>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
+<!-- All Subjects -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">📚 전체 과목 목록</h3>
+  </div>
+  <div class="card-content">
+    <div class="subject-nav">
+      <% @subjects.each do |subject_id, subject_name| %>
+        <% stats = @subject_stats[subject_id] %>
+        <%= link_to quiz_selection_subject_path(subject_id), 
+            class: "subject-nav-card subject-nav-card--subject-#{subject_id}" do %>
+          <div class="subject-nav-card-header">
+            <div class="subject-nav-card-icon">
+              <%= ["🔵", "🟣", "🟢", "🟠", "🔴", "🟦"][subject_id - 1] %>
+            </div>
+            <div class="subject-nav-card-title"><%= subject_name %></div>
+            <span class="quiz-nav-action">▶️</span>
+          </div>
+          <div class="subject-nav-card-stats">
+            <span>평균 <%= stats[:average_score].round %>점</span>
+            <span>세션 <%= stats[:total_sessions] %>회</span>
+          </div>
+          <% if stats[:total_sessions] > 0 %>
+            <div class="subject-nav-card-progress">
+              <div class="subject-nav-card-progress-fill" 
+                   style="width: <%= [stats[:average_score], 100].min %>%"></div>
+            </div>
+          <% end %>
+          <% if stats[:last_played] %>
+            <div class="badge-subjects-container" style="margin-top: var(--space-3);">
+              <span class="badge badge--primary">
+                최근 <%= time_ago_in_words(Time.at(stats[:last_played])) %> 전
+              </span>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Sessions -->
+<% if @recent_sessions.any? %>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">📅 최근 학습 기록</h3>
+  </div>
+  <div class="card-content">
+    <% @recent_sessions.each do |session| %>
+      <div class="list-item">
+        <div class="list-item-content">
+          <div class="list-item-title">
+            <%= session['subject_name'] %> - <%= t("difficulty.#{session['difficulty']}", default: session['difficulty']) %>
+          </div>
+          <div class="list-item-subtitle">
+            점수: <%= session['score'] %>점 • 
+            정답: <%= session['correct_answers'] %>/20 • 
+            <%= time_ago_in_words(Time.at(session['completed_at'])) %> 전
+          </div>
+        </div>
+        <% if session['score'] >= 80 %>
+          <span class="badge badge--success">우수</span>
+        <% elsif session['score'] >= 60 %>
+          <span class="badge badge--warning">보통</span>
+        <% else %>
+          <span class="badge badge--error">미흡</span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
+<style>
+.subject-nav {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .subject-nav {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .subject-nav {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item-content {
+  flex: 1;
+}
+
+.list-item-title {
+  font-weight: var(--font-medium);
+  margin-bottom: var(--space-1);
+}
+
+.list-item-subtitle {
+  font-size: var(--text-sm);
+  color: var(--gray-600);
+}
+</style>

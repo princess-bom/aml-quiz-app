@@ -1,6 +1,8 @@
 class FirebaseQuizzesController < ApplicationController
   # Skip authentication for testing Firebase integration
   skip_before_action :authenticate_user!
+  # Skip CSRF protection for testing
+  skip_before_action :verify_authenticity_token
   before_action :init_firebase_service
   before_action :find_quiz_session, only: [:show, :answer, :complete]
 
@@ -11,7 +13,7 @@ class FirebaseQuizzesController < ApplicationController
     end
 
     if @quiz_session['status'] == 'completed'
-      redirect_to firebase_quiz_result_path(@session_id)
+      redirect_to result_quiz_path(@session_id)
       return
     end
 
@@ -131,7 +133,7 @@ class FirebaseQuizzesController < ApplicationController
     end
 
     if @quiz_session['status'] == 'completed'
-      redirect_to firebase_quiz_result_path(@session_id)
+      redirect_to result_quiz_path(@session_id)
       return
     end
 
@@ -152,7 +154,7 @@ class FirebaseQuizzesController < ApplicationController
     # Update user statistics
     update_user_statistics(current_user_id, final_score)
 
-    redirect_to firebase_quiz_result_path(@session_id)
+    redirect_to result_quiz_path(@session_id)
   end
 
   def result

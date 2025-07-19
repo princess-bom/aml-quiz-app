@@ -80,7 +80,7 @@
       <% end %>
       
       <%= link_to quiz_selection_path, 
-          class: "mobile-bottom-nav-item #{'active' if current_page?(quiz_selection_path) || controller_name == 'quizzes' || controller_name == 'quiz_results'}", 
+          class: "mobile-bottom-nav-item #{'active' if controller_name == 'firebase_quiz_selection' || controller_name == 'firebase_quizzes' || controller_name == 'quiz_results'}", 
           data: { nav: 'quiz' } do %>
         <span class="mobile-bottom-nav-icon">📚</span>
         <span class="mobile-bottom-nav-label">퀴즈</span>

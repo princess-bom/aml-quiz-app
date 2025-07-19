@@ -14,14 +14,14 @@ Rails.application.routes.draw do
   post "login" => "sessions#create"
   delete "logout" => "sessions#destroy", as: :logout
 
-  # Firebase-based quiz routes
-  get "firebase_quiz_selection" => "firebase_quiz_selection#index", as: :firebase_quiz_selection
-  get "firebase_quiz_selection/:subject_id" => "firebase_quiz_selection#show_subject", as: :firebase_quiz_selection_subject
-  post "firebase_quiz_selection/start" => "firebase_quiz_selection#start_quiz", as: :start_firebase_quiz
-  get "firebase_quiz_selection/recommended" => "firebase_quiz_selection#recommended", as: :recommended_firebase_quizzes
+  # Main quiz routes (Firebase-based)
+  get "quiz_selection" => "firebase_quiz_selection#index", as: :quiz_selection
+  get "quiz_selection/:subject_id" => "firebase_quiz_selection#show_subject", as: :quiz_selection_subject
+  post "quiz_selection/start" => "firebase_quiz_selection#start_quiz", as: :start_quiz
+  get "quiz_selection/recommended" => "firebase_quiz_selection#recommended", as: :recommended_quizzes
 
-  # Firebase quiz execution routes
-  resources :firebase_quizzes, path: "firebase_quiz", only: [:show] do
+  # Quiz execution routes
+  resources :quizzes, path: "quiz", controller: "firebase_quizzes", only: [:show] do
     member do
       post :answer
       post :complete
@@ -29,19 +29,10 @@ Rails.application.routes.draw do
       get :result
     end
   end
-
-  # Legacy quiz selection routes (can be removed later)
-  get "quiz_selection" => "quiz_selection#index", as: :quiz_selection
-  get "quiz_selection/:subject" => "quiz_selection#show_subject", as: :quiz_selection_subject
-  post "quiz_selection/start" => "quiz_selection#start_quiz", as: :start_quiz
-  get "quiz_selection/recommended" => "quiz_selection#recommended", as: :recommended_quizzes
-
-  # Legacy quiz routes (can be removed later)
-  resources :quizzes, only: [:show, :new, :create] do
-    member do
-      post :answer
-    end
-  end
+  
+  # Firebase-specific routes (kept for backward compatibility)
+  get "firebase_quiz_selection" => redirect("/quiz_selection")
+  get "firebase_quiz/:id" => redirect("/quiz/%{id}")
 
   # Quiz results routes
   resources :quiz_results, only: [:show]

@@ -28,11 +28,21 @@ class FirebaseService
     
     return [] unless response
     
-    # Convert Firebase object format to array
+    # Handle both array and object formats from Firebase
     questions = []
-    response.each do |key, value|
-      next unless value.is_a?(Hash)
-      questions << value.merge(firebase_key: key)
+    
+    if response.is_a?(Array)
+      # Firebase returns array format (numeric indices starting from 1)
+      response.each_with_index do |value, index|
+        next unless value.is_a?(Hash) && value.present?
+        questions << value.merge(firebase_key: index.to_s)
+      end
+    elsif response.is_a?(Hash)
+      # Firebase returns object format
+      response.each do |key, value|
+        next unless value.is_a?(Hash) && value.present?
+        questions << value.merge(firebase_key: key)
+      end
     end
     
     questions
@@ -70,11 +80,21 @@ class FirebaseService
     
     return [] unless response
     
-    # Convert Firebase object format to array
+    # Handle both array and object formats from Firebase
     explanations = []
-    response.each do |key, value|
-      next unless value.is_a?(Hash)
-      explanations << value.merge(firebase_key: key)
+    
+    if response.is_a?(Array)
+      # Firebase returns array format (numeric indices starting from 1)
+      response.each_with_index do |value, index|
+        next unless value.is_a?(Hash) && value.present?
+        explanations << value.merge(firebase_key: index.to_s)
+      end
+    elsif response.is_a?(Hash)
+      # Firebase returns object format
+      response.each do |key, value|
+        next unless value.is_a?(Hash) && value.present?
+        explanations << value.merge(firebase_key: key)
+      end
     end
     
     explanations
@@ -83,9 +103,13 @@ class FirebaseService
   # User quiz sessions and statistics
   def create_quiz_session(user_id, session_data)
     timestamp = Time.current.to_i
-    url = "#{@base_url}/users/#{user_id}/quiz_sessions/#{timestamp}.json"
-    session_data = session_data.merge(created_at: timestamp)
-    make_request(:put, url, session_data)
+    session_id = "session_#{timestamp}"
+    url = "#{@base_url}/users/#{user_id}/quiz_sessions/#{session_id}.json"
+    session_data = session_data.merge(created_at: timestamp, session_id: session_id)
+    result = make_request(:put, url, session_data)
+    
+    # Return the session_id for redirect
+    { 'session_id' => session_id, 'result' => result }
   end
   
   def get_user_quiz_sessions(user_id)

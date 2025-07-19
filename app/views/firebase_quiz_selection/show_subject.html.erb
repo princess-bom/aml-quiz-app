@@ -1,0 +1,228 @@
+<% content_for :page_title, @subject_name %>
+<% content_for :back_button do %>
+  <%= link_to quiz_selection_path, class: "mobile-header-back" do %>
+    <span class="mobile-header-back-icon">←</span>
+  <% end %>
+<% end %>
+
+<!-- Subject Header -->
+<div class="dashboard-header text-center">
+  <h1 class="dashboard-title">
+    <%= ["🔵", "🟣", "🟢", "🟠", "🔴", "🟦"][@subject_id - 1] %> <%= @subject_name %>
+  </h1>
+  <p class="dashboard-subtitle">난이도별 퀴즈 선택</p>
+</div>
+
+<!-- Subject Statistics -->
+<div class="dashboard-stats">
+  <% total_attempts = @subject_stats.values.sum { |s| s[:attempts] } %>
+  <% total_correct = @subject_stats.values.sum { |s| s[:correct] } %>
+  <% overall_accuracy = total_attempts > 0 ? (total_correct.to_f / (total_attempts * 20) * 100).round(1) : 0 %>
+  
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-title">총 시도</div>
+    <div class="dashboard-stat-value"><%= total_attempts %>회</div>
+  </div>
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-title">평균 정답률</div>
+    <div class="dashboard-stat-value"><%= overall_accuracy %>%</div>
+  </div>
+  <div class="dashboard-stat-card">
+    <div class="dashboard-stat-title">총 문제</div>
+    <div class="dashboard-stat-value"><%= @subject_questions.values.sum { |q| q[:available] } %>개</div>
+  </div>
+</div>
+
+<!-- Difficulty Levels -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">📝 난이도별 퀴즈</h3>
+  </div>
+  <div class="card-content">
+    <% @difficulty_levels.each do |difficulty| %>
+      <% stats = @subject_stats[difficulty] %>
+      <% questions = @subject_questions[difficulty] %>
+      
+      <div class="difficulty-section">
+        <div class="difficulty-header">
+          <h4 class="difficulty-title">
+            <% case difficulty %>
+            <% when 'high' %>
+              💡 상급 (기본 개념)
+            <% when 'medium_high' %>
+              🔧 중상급 (실무 응용)
+            <% when 'highest' %>
+              🚀 최상급 (종합 문제)
+            <% end %>
+          </h4>
+          <span class="badge badge--<%= difficulty == 'high' ? 'easy' : difficulty == 'medium_high' ? 'medium' : 'hard' %>">
+            <%= questions[:available] %>문제
+          </span>
+        </div>
+        
+        <div class="difficulty-stats">
+          <div class="stat-item">
+            <span class="stat-label">시도:</span>
+            <span class="stat-value"><%= stats[:attempts] %>회</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">정답률:</span>
+            <span class="stat-value"><%= stats[:accuracy] %>%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">평균:</span>
+            <span class="stat-value"><%= stats[:average_score] %>점</span>
+          </div>
+        </div>
+        
+        <% if questions[:available] > 0 %>
+          <%= form_with url: start_quiz_path, method: :post, local: true, class: "quiz-start-form" do |f| %>
+            <%= f.hidden_field :subject_id, value: @subject_id %>
+            <%= f.hidden_field :difficulty, value: difficulty %>
+            
+            <% if questions[:sample_question] %>
+              <div class="sample-question">
+                <p class="sample-question-label">예시 문제:</p>
+                <p class="sample-question-text">
+                  <%= truncate(questions[:sample_question]['question_text'], length: 100) %>
+                </p>
+              </div>
+            <% end %>
+            
+            <%= f.submit "퀴즈 시작 (20문제)", 
+                class: "button button--primary button--full",
+                data: { confirm: "#{@subject_name} #{t("difficulty.#{difficulty}", default: difficulty)} 난이도 퀴즈를 시작하시겠습니까?" } %>
+          <% end %>
+        <% else %>
+          <div class="alert alert--info">
+            <p>아직 준비 중인 문제입니다.</p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Progress Summary -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">📊 학습 진도</h3>
+  </div>
+  <div class="card-content">
+    <% @difficulty_levels.each do |difficulty| %>
+      <% stats = @subject_stats[difficulty] %>
+      <% progress = stats[:attempts] > 0 ? [stats[:average_score], 100].min : 0 %>
+      
+      <div class="progress-item">
+        <div class="progress-label">
+          <span><%= t("difficulty.#{difficulty}", default: difficulty) %></span>
+          <span><%= progress.round %>%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar-fill" style="width: <%= progress %>%"></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.difficulty-section {
+  padding: var(--space-4);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.difficulty-section:last-child {
+  margin-bottom: 0;
+}
+
+.difficulty-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.difficulty-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-medium);
+  margin: 0;
+}
+
+.difficulty-stats {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+  background-color: var(--gray-50);
+  border-radius: var(--radius-md);
+}
+
+.stat-item {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.stat-label {
+  color: var(--gray-600);
+  font-size: var(--text-sm);
+}
+
+.stat-value {
+  font-weight: var(--font-medium);
+}
+
+.sample-question {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+  background-color: var(--blue-50);
+  border-radius: var(--radius-md);
+}
+
+.sample-question-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--blue-700);
+  margin-bottom: var(--space-2);
+}
+
+.sample-question-text {
+  font-size: var(--text-sm);
+  color: var(--gray-700);
+  margin: 0;
+}
+
+.progress-item {
+  margin-bottom: var(--space-4);
+}
+
+.progress-item:last-child {
+  margin-bottom: 0;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary-600);
+  transition: width 0.3s ease;
+}
+
+.quiz-start-form {
+  margin-top: var(--space-4);
+}
+</style>
